@@ -1,0 +1,115 @@
+
+
+
+.form-builder-container{
+
+    display: flex;
+
+}
+
+
+
+.component-container, .form-space{
+
+    border: 1px solid red;
+
+}
+
+.component-container{
+    flex: 1;
+}
+
+
+.form-space{
+    padding: 10px;
+    flex: 2.5;
+}
+
+
+.form-space input:first-child,
+.form-space span:first-child
+{
+    margin-left: 0px;
+}
+
+.form-space span{
+    display: flex;
+    flex-direction: column;
+}
+
+.formNewLine{
+    border : 1px solid lightgrey;
+    border-radius : 4px;
+    min-height : 60px;
+    width : 100%;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-bottom: 5px;
+}
+
+
+
+.left5px{
+    margin-left: 25px;
+}
+
+.top10px{
+    margin-top: 10px;
+}
+
+.top5px{
+    margin-top: 5px;
+}
+
+.paddingRight10px{
+    padding-right: 10px;
+}
+
+.paddingLeft10px{
+    padding-left: 20px;
+}
+
+
+.displayRow{
+    display: flex;
+    flex-direction: row !important;
+}
+
+.displayRow span{
+    display: flex;
+    flex-direction: row;
+}
+
+.textBold{
+    font-weight: bold;
+}
+
+
+.optionLabel{
+    font-size: 11px;
+}
+
+.posAbsolute{
+    position: absolute;
+}
+
+.removeComponent, .addBtn{
+    cursor: pointer;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:grey;
+    font-size: 12px;
+    padding-left: 5px;
+}
+
+.addBtn{
+    padding-top: 4px;
+}
+
+.newOptionInput{
+    height: 15px !important;
+    border: 1px solid;
+    border-radius: 2px;
+    padding-bottom: 4px;
+    margin-top: 3px;
+    margin-left: 5px;
+}

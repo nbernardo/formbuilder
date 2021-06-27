@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script defer src="assets/js/Component.js"></script>
+    <script defer src="assets/js/component.js"></script>
+    <script defer src="assets/js/drag.js"></script>
+    <link rel="stylesheet" href="assets/css/main.css">
+
+</head>
+
+<body>
+
+    <div class="form-builder-container">
+
+        <div class="component-container">
+
+            <ul>
+                <li draggable="true" ondrag="dragging(event)" data-type="Input">
+                    Caixa de Texto
+                </li>
+                <li draggable="true" ondrag="dragging(event)" data-type="Radio">
+                    Opção exlusiva
+                </li>
+                <li draggable="true" ondrag="dragging(event)" data-type="Check">
+                    Opção Multipla
+                </li>
+                <li draggable="true" ondrag="dragging(event)" data-type="Select">
+                    Lista Exclusiva
+                </li>
+                <li draggable="true" ondrag="dragging(event)" data-type="MultiSelect">
+                    Lista Multipla
+                </li>
+                <li draggable="true" ondrag="dragging(event)" data-type="Textarea">
+                    Texto livre
+                </li>
+                <li draggable="true" ondrag="dragging(event)" data-type="File">
+                    Upload Ficheiro
+                </li>
+            </ul>
+
+        </div>
+
+
+        <div class="form-space" id="formArea"></div>
+
+    </div>
+
+</body>
+
+</html>
