@@ -80,6 +80,11 @@
     flex-direction: row;
 }
 
+.displayCol{
+    display: flex;
+    flex-direction: column;
+}
+
 .textBold{
     font-weight: bold;
 }
@@ -112,4 +117,32 @@
     padding-bottom: 4px;
     margin-top: 3px;
     margin-left: 5px;
+}
+
+#formPreviewButton{
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+#previewFormContainer{
+    position: absolute;
+    background: white;
+    width: 100%;
+    height: 100%;
+    top: 0;
+}
+
+.closePreview{
+
+    margin-top: 31px;
+    margin-left: 31px;
+    cursor: pointer;
+
+}
+
+
+.formInputLabelNormal{
+
+    margin-left: 0px;
+
 }

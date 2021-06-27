@@ -15,6 +15,7 @@ class Component {
         let containerId = `inputContainer_${componentId}`;
         container.id = containerId;
         container.classList.add("left5px");
+        container.classList.add("displayCol");
 
         removeBtn.innerHTML = "x";
         removeBtn.className = "posAbsolute removeComponent";
@@ -41,9 +42,7 @@ class Component {
         
         const lable = document.createElement("label");
         lable.contentEditable = true;
-        lable.classList.add("paddingRight10px");
-        lable.classList.add("paddingLeft10px");
-        lable.classList.add("textBold");
+        lable.className = "formInputLabel paddingRight10px paddingLeft10px textBold";
         lable.innerHTML = "Nome do campo";
 
         return lable;
@@ -81,7 +80,7 @@ class Component {
         optionGroup.appendChild(label);
         optionGroup.appendChild(component);
 
-        optionsContainer.className = "displayRow";
+        optionsContainer.className = "displayRow optionGroupContainer";
         optionsContainer.appendChild(optionGroup);
 
         return optionsContainer;
@@ -95,7 +94,7 @@ class Component {
 
         this.optionsName = (new Date()).getTime();
         container.id = `optionGroupContainer_${this.optionsName}`;
-        container.classList.add("left5px");
+        container.className = "left5px";
 
         const values = options ? [...options] : ["Opção1", "Opção2"];
         container.appendChild(this.newLabel());
@@ -138,7 +137,7 @@ class Component {
         container.appendChild(this.newLabel());
 
         let addOptionBtn = newComponent("span");
-        addOptionBtn.classList = "displayRow";
+        addOptionBtn.classList = "displayRow newOptionContainer";
         let btn = newComponent("a");
         btn.innerHTML = "Adicionar";
         btn.className = "addBtn";
