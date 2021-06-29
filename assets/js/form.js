@@ -1,3 +1,7 @@
+const CLOSEBTN = `<br><span class="closePreview btnAbb" onclick="closePreview()">X</span><br><br>`;
+const SAVEBTN = `<button onclick="saveForm()" id="formSaveButton">Salvar Formulário</button><br>`; 
+
+
 function closePreview() {
 
     let previewContainer = document.getElementById("previewFormContainer");
@@ -13,10 +17,10 @@ const previewForm = function () {
     previewContainer.id = "previewFormContainer";
     previewContainer.style.display = "none";
 
-    const closeBtn = `<span class="closePreview btnAbb" onclick="closePreview()">X</span>`;
+    const actions = `${CLOSEBTN}${SAVEBTN}`;
 
     document.body.appendChild(previewContainer);
-    document.getElementById("previewFormContainer").innerHTML = `<br>${closeBtn}<br><br>${onCreationForm}`;
+    document.getElementById("previewFormContainer").innerHTML = `${actions}${onCreationForm}`;
 
     setTimeout(() => {
 
@@ -30,6 +34,36 @@ const previewForm = function () {
         document.getElementById("previewFormContainer").style.display = "";
 
     }, 500);
+
+}
+
+const sendForm = function(content){
+
+    const SERVER = "http://localhost:5000";
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST",`${SERVER}/newForm`, true);
+
+    const form = new FormData();
+    form.append("formContent", content);
+    
+    xhr.send(form);
+
+    xhr.onloadend = function(){
+
+        if(xhr.readyState == 4){
+            console.log(`Resultado e: `);
+            console.log(xhr.responseText);
+        }
+
+    }
+
+}
+
+const saveForm = function(){
+
+    const formContent = document.getElementById("previewFormContainer").innerHTML;
+    const realForm = formContent.replace(CLOSEBTN,"").replace(SAVEBTN,"");
+    sendForm(realForm);
 
 }
 
