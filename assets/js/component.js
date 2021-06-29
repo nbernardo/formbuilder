@@ -154,7 +154,7 @@ class Component {
 
         let component = newComponent("select");
         component.id = `${idSelect}`;
-        component.className = "top5px"
+        component.className = "top5px selectComponent";
 
         let firstOption = newComponent("option");
         firstOption.innerHTML = "SELECCIONE";
@@ -166,6 +166,55 @@ class Component {
         return container;
 
     }
+
+
+
+    generateCheck(optionsContainer, values, value){
+
+        let component = this.newComponent("input");
+        component.type = "checkbox";
+        component.name = `optionGroup_${this.optionsName}`;
+        let label = this.newComponent("label");
+        label.contentEditable = true;
+        label.classList.add("optionLabel");
+        label.innerHTML = values[value];
+
+        let optionGroup = this.newComponent("span");
+        optionGroup.className = "left5px";
+        optionGroup.appendChild(label);
+        optionGroup.appendChild(component);
+
+        optionsContainer.className = "displayRow optionGroupContainer";
+        optionsContainer.appendChild(optionGroup);
+
+        return optionsContainer;
+
+    }
+
+    newCheck({nome, placeholder, required, options}){
+
+        let container = this.newContainer("span");
+        let optionsContainer = this.newComponent("div");
+
+        this.optionsName = (new Date()).getTime();
+        container.id = `optionGroupContainer_${this.optionsName}`;
+        container.className = "left5px";
+
+        const values = options ? [...options] : ["Opção1", "Opção2"];
+        container.appendChild(this.newLabel());
+
+        for(let value in values){
+
+            let optionsResult = this.generateCheck(optionsContainer, values, value);
+            container.appendChild(optionsResult);
+
+        }
+
+        console.log(`Creating Radio component`);
+        return container;
+
+    }
+
 
 
 }

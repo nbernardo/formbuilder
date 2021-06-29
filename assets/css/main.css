@@ -146,3 +146,30 @@
     margin-left: 0px;
 
 }
+
+
+.lineRemover{
+
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    background: lightgray;
+    color: #443f3f;
+    border-top-right-radius: 5px;
+    padding-left: 8px;
+    font-size: 14px;
+    width: 108px;
+
+}
+
+span .lineRemover:hover{
+
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    background: #443f3f;
+    color: lightgray;
+    border-top-right-radius: 5px;
+    padding-left: 8px;
+    font-size: 14px;
+    width: 108px;
+
+}

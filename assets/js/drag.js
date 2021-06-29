@@ -111,9 +111,21 @@ function newComponentLine(e) {
         console.log(`Lagrou o objecto na linha nova`);
     }
     newLine.className = "formNewLine";
-    newLine.classList.add("top10px");
-    newLine.id = `formNewLine${getTotalLines() + 1}`;
+    
+    newLine.id = `formNewLine${(new Date).getTime()}`;
     newLine.innerHTML = LINEPLACEHOLDER;
+
+    const removeLineBtn = document.createElement("span");
+    removeLineBtn.innerHTML = `Remover linha`;
+    removeLineBtn.className = `top10px removeComponent lineRemover`;
+
+    removeLineBtn.onclick = function(){
+        let curLine = document.getElementById(newLine.id);
+        document.getElementById("formArea").removeChild(curLine);
+        document.getElementById("formArea").removeChild(removeLineBtn);
+    }
+
+    document.getElementById("formArea").appendChild(removeLineBtn);
     document.getElementById("formArea").appendChild(newLine);
 
 }

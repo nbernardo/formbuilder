@@ -25,6 +25,7 @@ const previewForm = function () {
         removeRemoveComponent(context);
         resetLabelPos(context);
         resetFormLines(context);
+        resetSelectPos(context);
         resetOptionGroupContainer(context);
         document.getElementById("previewFormContainer").style.display = "";
 
@@ -67,6 +68,16 @@ function resetFormLines(ctx) {
     let allContainers = ctx.getElementsByClassName("formNewLine");
     for (let idx = 0; idx < allContainers.length; idx++) {
         allContainers[idx].style.minHeight = "45px";
+        allContainers[idx].style.marginTop = "5px";
+    }
+
+}
+
+function resetSelectPos(ctx) {
+
+    let allSelects = ctx.getElementsByClassName("selectComponent");
+    for (let idx = 0; idx < allSelects.length; idx++) {
+        allSelects[idx].style.marginTop = "-2px";
     }
 
 }
@@ -76,6 +87,7 @@ function resetOptionGroupContainer(ctx) {
 
     try {
 
+        return;
         ctx
             .getElementsByClassName("optionGroupContainer")[0]
             .getElementsByTagName("span")[0]
