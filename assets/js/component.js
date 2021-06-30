@@ -47,9 +47,29 @@ class Component {
 
         lable.onkeyup = function(event){
 
-            ctx.getElementsByTagName("input")[0].value = event.target.innerHTML;
-            //console.log(`This is the context: ${ctx}`);
-            //console.log(`Valor context: ${ctx.getElementsByTagName("input")[0].value}`);
+            let comboBox = ctx.getElementsByTagName("select");
+            if(comboBox.length > 0){
+                comboBox[0].name = extractProperIdValue(event.target.innerHTML);
+                comboBox[0].classList.add("databaseField");
+                return;
+            }
+
+            //ctx.getElementsByTagName("input")[0].value = extractProperIdValue(event.target.innerHTML);
+            const inputFields = ctx.getElementsByTagName("input");
+            const totalFields = inputFields.length;
+
+            if(totalFields == 1){
+                ctx.getElementsByTagName("input")[0].name = extractProperIdValue(event.target.innerHTML);
+                ctx.getElementsByTagName("input")[0].classList.add("databaseField");
+            }
+
+            if(totalFields > 1){
+                for(let x = 0; x < totalFields; x++){
+                    ctx.getElementsByTagName("input")[x].name = extractProperIdValue(event.target.innerHTML);
+                    ctx.getElementsByTagName("input")[x].classList.add("databaseField");
+                }
+            }
+
 
         }
 
@@ -105,7 +125,7 @@ class Component {
         container.className = "left5px";
 
         const values = options ? [...options] : ["Opção1", "Opção2"];
-        container.appendChild(this.newLabel());
+        container.appendChild(this.newLabel(container));
 
         for(let value in values){
 
@@ -142,7 +162,7 @@ class Component {
         }
 
         let container = this.newContainer("span");
-        container.appendChild(this.newLabel());
+        container.appendChild(this.newLabel(container));
 
         let addOptionBtn = newComponent("span");
         addOptionBtn.classList = "displayRow newOptionContainer";
@@ -209,7 +229,7 @@ class Component {
         container.className = "left5px";
 
         const values = options ? [...options] : ["Opção1", "Opção2"];
-        container.appendChild(this.newLabel());
+        container.appendChild(this.newLabel(container));
 
         for(let value in values){
 

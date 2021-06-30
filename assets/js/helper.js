@@ -1,12 +1,3 @@
-let charToReplace = [
-    {"a":"ã|â|á|à"},
-    {"e":"ẽ|ê|é|è"},
-    {"i":"ĩ|î|í|ì"},
-    {"o":"õ|ô|ó|ò"},
-    {"u":"ũ|û|ú|ù"},
-]
-
-
 String.prototype.capitalize = function(){
 
     let stringSnippets = this.split(" ");
@@ -40,14 +31,22 @@ String.prototype.removeSpaces = function(){
  @param {Array} values
 */
 
-function extractProperIdValue(values, text) {
+const extractProperIdValue = function(text) {
+
+    let charToReplace = [
+        {"a":"ã|â|á|à"},
+        {"e":"ẽ|ê|é|è"},
+        {"i":"ĩ|î|í|ì"},
+        {"o":"õ|ô|ó|ò"},
+        {"u":"ũ|û|ú|ù"},
+    ];
 
     let finalString = `"${text.toCamelCase().removeSpaces()}"`;
 
-    for (let x = 0; x < values.length; x++) {
+    for (let x = 0; x < charToReplace.length; x++) {
 
-        const curLetter = Object.keys(values[x]);
-        const toReplace = Object.values(values[x]);
+        const curLetter = Object.keys(charToReplace[x]);
+        const toReplace = Object.values(charToReplace[x]);
         let itemsToReplace = toReplace[0].split("|");
 
         for (let x1 = 0; x1 < itemsToReplace.length; x1++) {
@@ -56,15 +55,10 @@ function extractProperIdValue(values, text) {
 
     }
 
-    return finalString.toString();
+    return eval(finalString.replace("&nbsp;",""));
 
 }
 
-
-console.log("Agora o primeirão dá só dàgora âto o OutrÔ Ũ".capitalize().removeSpaces());
-//return;
-
-
-let result = extractProperIdValue(charToReplace, "Agora o primeirão dá só dàgora âto o OutrÔ Ũ");
-result = eval(result);
-console.log(result);
+//TO Test
+//let result = extractProperIdValue("Agora o primeirão dá só dàgora âto o OutrÔ Ũ");
+//console.log(result);
