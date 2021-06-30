@@ -38,12 +38,20 @@ class Component {
 
     }
 
-    newLabel(){
+    newLabel(ctx){
         
         const lable = document.createElement("label");
         lable.contentEditable = true;
         lable.className = "formInputLabel paddingRight10px paddingLeft10px textBold";
         lable.innerHTML = "Nome do campo";
+
+        lable.onkeyup = function(event){
+
+            ctx.getElementsByTagName("input")[0].value = event.target.innerHTML;
+            //console.log(`This is the context: ${ctx}`);
+            //console.log(`Valor context: ${ctx.getElementsByTagName("input")[0].value}`);
+
+        }
 
         return lable;
 
@@ -59,7 +67,7 @@ class Component {
             component[prop] = props[prop];
         
         console.log(`Creating Input component from class`);
-        container.appendChild(this.newLabel());
+        container.appendChild(this.newLabel(container));
         container.appendChild(component);
         return container;
 

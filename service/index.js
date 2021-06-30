@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const fs = require("fs");
+const xmlBeauty = require("xml-beautifier");
 
 const PORT = process.env.PORT | 5000;
-
 
 //app.use(require("body-parser")());
 //app.use(express.urlencoded());
@@ -15,9 +16,15 @@ app.listen(PORT, () => console.log(`Servico rodando em ${PORT}`));
 
 app.post("/newForm", (req, client) => {
 
-    console.log(`Receivedd request is: `);
-    console.log(req.body);
+    const formContent = req.body.formContent;
+    const beautyFormContent = xmlBeauty(formContent);
 
-    client.send("Process done!");
+    fs.writeFile('form1.xml',formContent, (err) => {
+        
+        console.log(`Executou a criacao do ficheiro: `, err);
+        client.send("Process done!");
+        
+    });
+
 
 })
