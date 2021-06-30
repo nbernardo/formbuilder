@@ -1,5 +1,5 @@
 const CLOSEBTN = `<br><span class="closePreview btnAbb" onclick="closePreview()">X</span><br><br>`;
-const SAVEBTN = `<button onclick="saveForm()" id="formSaveButton">Salvar Formulário</button><br>`; 
+const SAVEBTN = `<button onclick="saveForm()" id="formSaveButton">Salvar Formulário</button><br>`;
 
 
 function closePreview() {
@@ -37,20 +37,20 @@ const previewForm = function () {
 
 }
 
-const sendForm = function(content){
+const sendForm = function (content) {
 
     const SERVER = "http://localhost:5000";
     const xhr = new XMLHttpRequest();
-    xhr.open("POST",`${SERVER}/newForm`, true);
+    xhr.open("POST", `${SERVER}/newForm`, true);
 
     const form = new FormData();
     form.append("formContent", content);
-    
+
     xhr.send(form);
 
-    xhr.onloadend = function(){
+    xhr.onloadend = function () {
 
-        if(xhr.readyState == 4){
+        if (xhr.readyState == 4) {
             console.log(`Resultado e: `);
             console.log(xhr.responseText);
         }
@@ -59,10 +59,29 @@ const sendForm = function(content){
 
 }
 
-const saveForm = function(){
+const saveForm = function () {
+
+    const ctx = document.getElementById("previewFormContainer");
+    const databaseFieldList = ctx.getElementsByClassName("databaseField");
+    let allDatabaseField = {};
+
+    for (let field in databaseFieldList) {
+        let curField = databaseFieldList[field];
+        console.log(`Component actual: `);
+        console.log(curField);
+        
+        if (curField.nodeName)
+            if (curField.name != "" && (curField.nodeName.toLowerCase() == "input" || curField.nodeName.toLowerCase() == "select"))
+                allDatabaseField[curField.name] = "";
+
+    }
+
+    console.log(`Found fields:`);
+    console.log(allDatabaseField);
+    return;
 
     const formContent = document.getElementById("previewFormContainer").innerHTML;
-    const realForm = formContent.replace(CLOSEBTN,"").replace(SAVEBTN,"");
+    const realForm = formContent.replace(CLOSEBTN, "").replace(SAVEBTN, "");
     sendForm(realForm);
 
 }
@@ -127,6 +146,6 @@ function resetOptionGroupContainer(ctx) {
             .getElementsByTagName("span")[0]
             .classList.remove("left5px");
 
-    } catch (error) {}
+    } catch (error) { }
 
 }
