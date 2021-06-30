@@ -37,7 +37,7 @@ const previewForm = function () {
 
 }
 
-const sendForm = function (content) {
+const sendForm = function (content, fields = "") {
 
     const SERVER = "http://localhost:5000";
     const xhr = new XMLHttpRequest();
@@ -45,6 +45,7 @@ const sendForm = function (content) {
 
     const form = new FormData();
     form.append("formContent", content);
+    form.append("databaseFields", JSON.stringify(fields));
 
     xhr.send(form);
 
@@ -67,22 +68,16 @@ const saveForm = function () {
 
     for (let field in databaseFieldList) {
         let curField = databaseFieldList[field];
-        console.log(`Component actual: `);
-        console.log(curField);
-        
+       
         if (curField.nodeName)
             if (curField.name != "" && (curField.nodeName.toLowerCase() == "input" || curField.nodeName.toLowerCase() == "select"))
                 allDatabaseField[curField.name] = "";
 
     }
 
-    console.log(`Found fields:`);
-    console.log(allDatabaseField);
-    return;
-
     const formContent = document.getElementById("previewFormContainer").innerHTML;
     const realForm = formContent.replace(CLOSEBTN, "").replace(SAVEBTN, "");
-    sendForm(realForm);
+    sendForm(realForm, allDatabaseField);
 
 }
 
