@@ -77,6 +77,10 @@ const saveForm = function () {
 
     const formContent = document.getElementById("previewFormContainer").innerHTML;
     const realForm = formContent.replace(CLOSEBTN, "").replace(SAVEBTN, "");
+
+    console.log(`Campos encontrados:`);
+    console.log(allDatabaseField);
+
     sendForm(realForm, allDatabaseField);
 
 }
