@@ -4,6 +4,8 @@ const cors = require("cors");
 const fs = require("fs");
 const xmlBeauty = require("xml-beautifier");
 const ModelGenerator = require("./models/ModelGenerator");
+const PostgresInstance = require("./models/PostgresInstance");
+
 
 const PORT = process.env.PORT | 5000;
 
@@ -25,7 +27,11 @@ app.post("/newForm", (req, client) => {
 
     const modelGenerator = new ModelGenerator();
     modelGenerator.fields = databaseFields;
-    modelGenerator.newModel().createOnFs(fs);
+    modelGenerator
+        .newModel()
+        .createOnFs(fs)
+        .createTable(PostgresInstance);
+
 
     return;
     fs.writeFile('form1.xml', formContent, (err) => {

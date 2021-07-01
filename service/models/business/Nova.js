@@ -1,0 +1,6 @@
+class NovoClass{
+
+	nome;
+	nomeDeFamilia;
+
+}

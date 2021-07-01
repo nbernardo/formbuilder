@@ -1,4 +1,5 @@
-const FileSys = require('./FileSystem');
+const FileSys = require('./interfaces/FileSystem');
+const DBInstance = require("./interfaces/DBInstance");
 
 module.exports = class ModelGenerator {
 
@@ -32,9 +33,29 @@ module.exports = class ModelGenerator {
         fs.writeFile(`${modelPath}/Nova.js`,this.modelContent, (err) => {
 
             console.log(`File was created`);
-            console.log(err);
+            console.log(`${err}`);
 
-        })
+        });
+        return this;
+
+    }
+
+
+    /** 
+    * @param { DBInstance } dbInstance
+    */
+    createTable(dbInstance){
+
+        const number = (new Date()).getTime();
+        let queryString = `CREATE TABLE newTable_${number}(\n`;
+        const fields = this.fields;
+
+        for(let idx in fields){
+            queryString += `\n\t${fields[idx]} VARCHAR(100),`;
+        }
+
+        queryString = `${queryString.substr(0,queryString.length - 1)}\n\n)`;
+        dbInstance.runQuery(queryString);
 
     }
 

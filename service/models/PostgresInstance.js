@@ -1,6 +1,7 @@
 const { Pool } = require("pg");
+const DBInstance = require("./interfaces/DBInstance");
 
-class AbstractModel {
+class PostgresInstance extends DBInstance {
 
 
     pool = new Pool({
@@ -38,3 +39,5 @@ class AbstractModel {
     }
 
 }
+
+module.exports = new PostgresInstance();
