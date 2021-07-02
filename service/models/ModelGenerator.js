@@ -6,16 +6,20 @@ module.exports = class ModelGenerator {
     fields = [];
     modelContent = null;
     tableName;
+    modelName = null;
+
+    constructor(name){
+        this.modelName = name;
+    }
 
     newModel() {
 
-        const className = `NovoClass`;
         const number = (new Date()).getTime();
         this.tableName = `newTable_${number}`;
 
         let fields = this.fields;
         
-        let modelContent = `const PostgresInstance = require("../PostgresInstance");\n\nclass ${className}{\n`;
+        let modelContent = `const PostgresInstance = require("../PostgresInstance");\n\nclass ${this.modelName}{\n`;
 
         for (let idx in fields) {
             modelContent += `\n\t${fields[idx]};`;
@@ -28,7 +32,7 @@ module.exports = class ModelGenerator {
         const findString = this.generateFindString();
         modelContent += `\n\n\tfind(){\n\t\tPostgresInstance.runQuery(\`${findString}\`);\n\t}`;
 
-        modelContent += `\n\n} \n\nmodule.exports = new ${className}();`;
+        modelContent += `\n\n} \n\nmodule.exports = new ${this.modelName}();`;
         this.modelContent = modelContent;
         return this;
 
@@ -42,7 +46,7 @@ module.exports = class ModelGenerator {
 
         const modelPath = `${__dirname}/business`;
         console.log(modelPath);
-        fs.writeFile(`${modelPath}/Nova.js`,this.modelContent, (err) => {
+        fs.writeFile(`${modelPath}/${this.modelName}.js`,this.modelContent, (err) => {
 
             console.log(`File was created`);
             console.log(`${err}`);

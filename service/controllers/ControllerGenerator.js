@@ -5,6 +5,11 @@ const FileSys = require('../models/interfaces/FileSystem');
 class ControllerGenerator {
 
     controllerContent;
+    controllerName = null;
+
+    constructor(name){
+        this.controllerName = name;
+    }
 
     setupRouter() {
 
@@ -18,7 +23,7 @@ class ControllerGenerator {
         saveAlgoritm += `
         router.post("/save", (req, client) => {
 
-            const Model = require("../../models/business/Nova");
+            const Model = require("../../models/business/${this.controllerName}");
             const content = (req.body instanceof Object) ? req.body : JSON.parse(req.body);
             const fields = Object.keys(content);
         
@@ -47,7 +52,7 @@ class ControllerGenerator {
 
         const controllerPath = `${__dirname}/business`;
         console.log(controllerPath);
-        fs.writeFile(`${controllerPath}/Nova.js`, this.controllerContent, (err) => {
+        fs.writeFile(`${controllerPath}/${this.controllerName}.js`, this.controllerContent, (err) => {
 
             console.log(`Controller was created`);
             console.log(`${err}`);
@@ -59,8 +64,9 @@ class ControllerGenerator {
 
     importController(){
 
-        //let controllerName
-        let controllerContent = `const controller = require("./controllers/business/Nova");\napp.use("/novo",controller);`;
+        let controllerName = `${this.controllerName}Controller`;
+        let endpointName = this.controllerName.toString().toLowerCase();
+        let controllerContent = `\n\nconst ${controllerName} = require("./controllers/business/${this.controllerName}");\napp.use("/${endpointName}",${controllerName});`;
         return controllerContent;
     }
 

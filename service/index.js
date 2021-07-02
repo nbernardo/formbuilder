@@ -25,14 +25,16 @@ app.post("/newForm", (req, client) => {
     console.log(databaseFields);
     client.send("Process done!");
 
-    const modelGenerator = new ModelGenerator();
+    const objectName = formContent.entityName || `NewObject_${(new Date).getTime()}`;
+
+    const modelGenerator = new ModelGenerator(objectName);
     modelGenerator.fields = databaseFields;
     modelGenerator
         .newModel()
         .createOnFs(fs)
         .createTable(PostgresInstance);
 
-    const controllerGenerator = new ControllerGenerator();
+    const controllerGenerator = new ControllerGenerator(objectName);
     controllerGenerator
         .newController()
         .createOnFs(fs);
