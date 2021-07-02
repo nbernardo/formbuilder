@@ -20,24 +20,6 @@ class PostgresInstance extends DBInstance {
 
     }
 
-    /**
-     * @Test
-     */
-    async db() {
-
-        const client = await this.getConnection();
-        const query = await client.query("SELECT NOW()");
-
-        const queryString = `
-        CREATE TABLE novaTest(
-            id int,
-            nome char(80)
-        )
-        `;
-
-        await client.query(queryString);
-    }
-
 }
 
 module.exports = new PostgresInstance();
