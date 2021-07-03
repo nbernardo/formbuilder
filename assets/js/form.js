@@ -76,7 +76,8 @@ const saveForm = function () {
     }
 
     const formContent = document.getElementById("previewFormContainer").innerHTML;
-    const realForm = formContent.replace(CLOSEBTN, "").replace(SAVEBTN, "");
+    let realForm = formContent.replace(CLOSEBTN, "").replace(SAVEBTN, "");
+    realForm += `<button onclick='formSumit()'>Guardar</button>`;
 
     console.log(`Campos encontrados:`);
     console.log(allDatabaseField);

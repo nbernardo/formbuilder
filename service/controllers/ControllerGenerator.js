@@ -1,5 +1,6 @@
 //const express = require('express');
 //const router = express.Router();
+
 const FileSys = require('../models/interfaces/FileSystem');
 
 class ControllerGenerator {
@@ -13,7 +14,9 @@ class ControllerGenerator {
 
     setupRouter() {
 
-        return `const express = require('express');\n\nconst router = express.Router();`;
+        let corsContent = `const cors = require("cors");\nrouter.use(cors({ origin: "*" }));\n`;
+        corsContent = "";
+        return `const express = require('express');\n\nconst router = express.Router();\n${corsContent}`;
 
     }
 
@@ -21,6 +24,9 @@ class ControllerGenerator {
 
         let saveAlgoritm = `${this.setupRouter()}\n\n`;
         saveAlgoritm += `
+
+        router.use(require("body-parser")());
+
         router.post("/save", (req, client) => {
 
             const Model = require("../../models/business/${this.controllerName}");
@@ -32,6 +38,7 @@ class ControllerGenerator {
             }
 
             Model.save();
+            client.setHeader('Access-Control-Allow-Origin', '*');
             client.send({msg: "Processo executado"});
         
         });
@@ -65,9 +72,15 @@ class ControllerGenerator {
     importController(){
 
         let controllerName = `${this.controllerName}Controller`;
-        let endpointName = this.controllerName.toString().toLowerCase();
-        let controllerContent = `\n\nconst ${controllerName} = require("./controllers/business/${this.controllerName}");\napp.use("/${endpointName}",${controllerName});`;
+        let controllerContent = `\n\nconst ${controllerName} = require("./controllers/business/${this.controllerName}");\napp.use("${this.getBaseEndpoint()}",${controllerName});`;
         return controllerContent;
+    }
+
+    getBaseEndpoint(){
+
+        let endpointName = this.controllerName.toString().toLowerCase();
+        return `/${endpointName}`;
+
     }
 
 }

@@ -1,0 +1,42 @@
+<span class="top10px removeComponent lineRemover" style="display: none; border: medium none;">Remover linha</span><div style="color: black; background: white none repeat scroll 0% 0%; display: flex; min-height: 45px; margin-top: 5px;" class="formNewLine" id="formNewLine1625291648516"><span id="inputContainer_1625291649236" class="left5px displayCol"><span class="posAbsolute removeComponent" style="display: none; border: medium none;">x</span><label class="formInputLabel paddingRight10px textBold" contenteditable="false">Nome pessoal</label><input placeholder="Digite um texto" name="nomePessoal" class="databaseField"></span><span id="inputContainer_1625291658351" class="left5px displayCol"><span class="posAbsolute removeComponent" style="display: none; border: medium none;">x</span><label class="formInputLabel paddingRight10px textBold" contenteditable="false">Nome de familia</label><input placeholder="Digite um texto" name="nomeDeFamilia" class="databaseField"></span></div><span class="top10px removeComponent lineRemover" style="display: none; border: medium none;">Remover linha</span><div style="color: black; background: white none repeat scroll 0% 0%; min-height: 45px; margin-top: 5px;" class="formNewLine" id="formNewLine1625291657115"><span id="optionGroupContainer_1625291671338" class="left5px"><span class="posAbsolute removeComponent" style="display: none; border: medium none;">x</span><label class="formInputLabel paddingRight10px textBold" contenteditable="false">Tipo registo</label><div class="displayRow optionGroupContainer"><span class="left5px"><label class="optionLabel" contenteditable="true">Aluno</label><input type="radio" name="tipoRegisto" class="databaseField"></span><span class="left5px"><label class="optionLabel" contenteditable="true">Professor</label><input type="radio" name="tipoRegisto" class="databaseField"></span></div></span></div>
+
+<script>
+
+function postJSONRequest({ action, callback, content }) {
+
+    const host = "localhost:5000";
+    const url = `http://${host}/newobject_1625293013366`;
+    const xhr = new XMLHttpRequest();
+
+    xhr.open("POST", `${url}/save`, true);
+    xhr.setRequestHeader("Content-type","application/json");
+    xhr.setRequestHeader("Access-Control-Allow-Origin","*");
+    xhr.send(JSON.stringify(content));
+
+    xhr.onload = function () {
+
+        if (xhr.readyState == xhr.DONE) {
+            callback(xhr.responseText);
+        }
+
+    }
+    
+}
+
+function formSumit(){
+
+    let content = {};
+    const fields = document.getElementsByClassName("databaseField");
+    for(let idx in fields) 
+        if (fields[idx].nodeName)
+            if (fields[idx].name != "" && (fields[idx].nodeName.toLowerCase() == "input" || fields[idx].nodeName.toLowerCase() == "select"))
+                content[fields[idx].name] = fields[idx].value;
+
+    console.log(`Data to send:`);
+    console.log(content);
+
+    postJSONRequest({action: "save", callback: (res) => console.log(res), content });
+
+}
+
+</script>
