@@ -1,3 +1,4 @@
 service/controllers/business
 service/models/business
 service/node_modules
+frontend/
