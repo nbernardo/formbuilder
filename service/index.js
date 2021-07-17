@@ -5,7 +5,7 @@ const fs = require("fs");
 const xmlBeauty = require("xml-beautifier");
 const ModelGenerator = require("./models/ModelGenerator");
 const ControllerGenerator = require("./controllers/ControllerGenerator");
-const ViewControllerGenerator = require("./util/ViewControllerGenerator");
+const ViewControllerGenerator = require("./util/ControllerGeneratorUtil");
 const PostgresInstance = require("./models/PostgresInstance");
 
 
@@ -27,6 +27,7 @@ app.post("/newForm", (req, client) => {
     console.log(databaseFields);
     client.send("Process done!");
 
+    formContent.entityName = `MaisUmModel`;
     const objectName = formContent.entityName || `NewObject_${(new Date).getTime()}`;
 
     const modelGenerator = new ModelGenerator(objectName);
@@ -38,8 +39,8 @@ app.post("/newForm", (req, client) => {
 
     const controllerGenerator = new ControllerGenerator(objectName);
     controllerGenerator
-        .newController()
-        .createOnFs(fs);
+        .newController(fs)
+        .createOnFs();
 
     //Import the new generated controller
     const stream = fs.createWriteStream("index.js",{flags: "a"});
@@ -64,5 +65,8 @@ app.post("/newForm", (req, client) => {
 
 })
 
-const NewObject_1625295527420Controller = require("./controllers/business/NewObject_1625295527420");
-app.use("/newobject_1625295527420",NewObject_1625295527420Controller);
+const NovaDemostracaoController = require("./controllers/business/NovaDemostracao");
+app.use("/novademostracao",NovaDemostracaoController);
+
+const MaisUmModelController = require("./controllers/business/MaisUmModel");
+app.use("/maisummodel",MaisUmModelController);

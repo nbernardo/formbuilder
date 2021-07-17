@@ -1,5 +1,5 @@
 const CLOSEBTN = `<br><span class="closePreview btnAbb" onclick="closePreview()">X</span><br><br>`;
-const SAVEBTN = `<button onclick="saveForm()" id="formSaveButton">Salvar Formulário</button><br>`;
+const SAVEBTN = `<button onclick="saveForm()" id="formSaveButton" type="button">Salvar Formulário</button><br>`;
 
 
 function closePreview() {

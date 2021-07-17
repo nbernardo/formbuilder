@@ -2,11 +2,13 @@
 //const router = express.Router();
 
 const FileSys = require('../models/interfaces/FileSystem');
+const ViewControllerGenerator = require('../util/ControllerGeneratorUtil');
 
 class ControllerGenerator {
 
     controllerContent;
     controllerName = null;
+    fileSystem = null;
 
     constructor(name){
         this.controllerName = name;
@@ -20,33 +22,22 @@ class ControllerGenerator {
 
     }
 
-    newController() {
+    /**
+    * @param {FileSys} fs 
+    */
+    newController(fs) {
 
-        let saveAlgoritm = `${this.setupRouter()}\n\n`;
-        saveAlgoritm += `
+        this.fileSystem = fs;
+        let controllerRouter = `${this.setupRouter()}\n\n`;
+        let controllerContent = ViewControllerGenerator.newBackController(fs);
 
-        router.use(require("body-parser")());
+        console.log(`Controller content: `);
+        console.log(controllerContent);
 
-        router.post("/save", (req, client) => {
+        //controllerContent = controllerContent.replace("#controllerName",this.controllerName);
 
-            const Model = require("../../models/business/${this.controllerName}");
-            const content = (req.body instanceof Object) ? req.body : JSON.parse(req.body);
-            const fields = Object.keys(content);
-        
-            for(let field of fields){
-                Model[field] = content[field];
-            }
+        this.controllerContent = `${controllerRouter}${controllerContent.replace("#controllerName",this.controllerName)}`;
 
-            Model.save();
-            client.setHeader('Access-Control-Allow-Origin', '*');
-            client.send({msg: "Processo executado"});
-        
-        });
-
-        module.exports = router;
-        `;
-
-        this.controllerContent = saveAlgoritm;
         return this;
 
     }
@@ -55,11 +46,11 @@ class ControllerGenerator {
     /**
     * @param {FileSys} fs 
     */
-    createOnFs(fs) {
+    createOnFs(fs = null) {
 
         const controllerPath = `${__dirname}/business`;
         console.log(controllerPath);
-        fs.writeFile(`${controllerPath}/${this.controllerName}.js`, this.controllerContent, (err) => {
+        this.fileSystem.writeFile(`${controllerPath}/${this.controllerName}.js`, this.controllerContent, (err) => {
 
             console.log(`Controller was created`);
             console.log(`${err}`);
