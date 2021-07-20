@@ -65,8 +65,15 @@ app.post("/newForm", (req, client) => {
 
 })
 
-const NovaDemostracaoController = require("./controllers/business/NovaDemostracao");
-app.use("/novademostracao",NovaDemostracaoController);
 
-const MaisUmModelController = require("./controllers/business/MaisUmModel");
-app.use("/maisummodel",MaisUmModelController);
+app.get("/form-list", (req, client) => {
+
+   fs.readdir("../frontend", (err, files) => {
+
+        client.send({
+            files
+        })
+
+   })
+
+})
