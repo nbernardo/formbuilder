@@ -51,11 +51,12 @@ app.post("/newForm", (req, client) => {
     //Generate  the funcions to call the service from the view
     const baseEndpoint = controllerGenerator.getBaseEndpoint().substr(1);
     const viewController = ViewControllerGenerator.newController(fs, baseEndpoint, "save");
-    const viewControllerContent = `<script>\n\n${viewController}\n\n</script>`
+    const viewControllerContent = `<script>\n\n${viewController}\n\n</script>`;
+    const cssContent = `<link href="../assets/css/main.css" rel="stylesheet" />`;
 
     //Generate the view itself
     const frontEndPath = `${__dirname}/../frontend`;
-    let viewContent = `${formContent.formContent}\n\n${viewControllerContent}`;
+    let viewContent = `${cssContent}\n\n${formContent.formContent}\n\n${viewControllerContent}`;
 
     fs.writeFile(`${frontEndPath}/${objectName}.html`, viewContent, (err) => {
 
@@ -69,11 +70,10 @@ app.post("/newForm", (req, client) => {
 app.get("/form-list", (req, client) => {
 
    fs.readdir("../frontend", (err, files) => {
-
-        client.send({
-            files
-        })
-
+        client.send({files});
    })
 
 })
+
+const MaisUmModelController = require("./controllers/business/MaisUmModel");
+app.use("/maisummodel",MaisUmModelController);
