@@ -149,3 +149,39 @@ function resetOptionGroupContainer(ctx) {
     } catch (error) { }
 
 }
+
+
+function newModel(){
+
+    //<img src="assets/icons/select.png" class="inputComponentIcon">
+    //<span class="inputComponentText"> Lista Exclusiva </span>
+
+    console.log(`Chamou no inicio`);
+    const container = document.getElementById("formConfigurationPanel");
+    const modelsList = container.getElementsByClassName("modelPannel")[0];
+
+    const modelIcon = document.createElement("img");
+    modelIcon.src = "assets/icons/data_model.png";
+    modelIcon.className = "inputComponentIcon";
+
+    const modelName = document.createElement("input"); 
+    modelName.contentEditable = true;
+    modelName.style.marginLeft = "7px";
+    modelName.style.marginTop = "3px";
+    modelName.style.width = "130px";
+    modelName.style.border = "none";
+    modelName.placeholder = `Nome Entidade`;
+
+    const modelLine = document.createElement("li");
+    modelLine.style.display = "flex";
+    modelLine.style.borderRadius = "3px";
+    modelLine.style.border = "1px solid grey";
+    modelLine.style.padding = "5px";
+    modelLine.appendChild(modelIcon);
+    modelLine.appendChild(modelName);
+
+    modelsList.appendChild(modelLine);
+
+    console.log(`Chamou no fim`);
+
+}

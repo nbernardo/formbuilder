@@ -38,6 +38,21 @@ class Component {
 
     }
 
+    newGroup(){
+
+        const container = this.newComponent("div");
+        const group = this.newComponent("fieldset");
+        const legend = this.newComponent("legend");
+
+        legend.appendChild(this.newLabel());
+        group.appendChild(legend);
+
+        container.appendChild(group);
+
+        return container;
+
+    }
+
     newLabel(ctx){
         
         const lable = document.createElement("label");

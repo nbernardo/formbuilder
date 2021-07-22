@@ -116,10 +116,18 @@ function newComponentLine(e) {
     newLine.innerHTML = LINEPLACEHOLDER;
 
     const removeLineBtn = document.createElement("span");
-    removeLineBtn.innerHTML = `Remover linha`;
+
+    removeLineBtn.innerHTML = `
+        x Remover linha
+        <label class='editing_tabel' style="font-weight: bold;" contenteditable="true">Grupo</label>
+    `;
     removeLineBtn.className = `top10px removeComponent lineRemover`;
 
-    removeLineBtn.onclick = function(){
+    removeLineBtn.onclick = function(event){
+        
+        if(event.target.className == "editing_tabel")
+            return;
+
         let curLine = document.getElementById(newLine.id);
         document.getElementById("formArea").removeChild(curLine);
         document.getElementById("formArea").removeChild(removeLineBtn);

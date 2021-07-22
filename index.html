@@ -25,29 +25,48 @@
 
             <button onclick="previewForm()" id="formPreviewButton">Previsualizar o form</button>
             
-            <ul>
-                <li draggable="true" ondrag="dragging(event)" data-type="Input">
-                    Caixa de Texto
-                </li>
-                <li draggable="true" ondrag="dragging(event)" data-type="Radio">
-                    Opção exlusiva
-                </li>
-                <li draggable="true" ondrag="dragging(event)" data-type="Check">
-                    Opção Multipla
-                </li>
-                <li draggable="true" ondrag="dragging(event)" data-type="Select">
-                    Lista Exclusiva
-                </li>
-                <li draggable="true" ondrag="dragging(event)" data-type="MultiSelect">
-                    Lista Multipla
-                </li>
-                <li draggable="true" ondrag="dragging(event)" data-type="Textarea">
-                    Texto livre
-                </li>
-                <li draggable="true" ondrag="dragging(event)" data-type="File">
-                    Upload Ficheiro
-                </li>
-            </ul>
+            <div id="formConfigurationPanel">
+
+                <ul class="modelPannel">
+                    <li onclick="newModel()" style="cursor: pointer;">
+                        + Adicionar
+                    </li>
+                </ul>
+                
+                <ul class="componentList">
+                    <!--
+                        <li draggable="true" ondrag="dragging(event)" data-type="Group">Fieldgroup</li>
+                    -->
+                    
+                    <li draggable="true" ondrag="dragging(event)" data-type="Input">
+                        <img src="assets/icons/input.png" class="inputComponentIcon">
+                        <span class="inputComponentText"> Caixa de Texto </span>
+                    </li>
+                    <li draggable="true" ondrag="dragging(event)" data-type="Radio">
+                        <img src="assets/icons/check.png" class="inputComponentIcon">
+                        <span class="inputComponentText"> Opção exlusiva </span>
+                    </li>
+                    <li draggable="true" ondrag="dragging(event)" data-type="Check">
+                        <img src="assets/icons/radio.png" class="inputComponentIcon">
+                        <span class="inputComponentText"> Opção Multipla </span>
+                    </li>
+                    <li draggable="true" ondrag="dragging(event)" data-type="Select">
+                        <img src="assets/icons/select.png" class="inputComponentIcon">
+                        <span class="inputComponentText"> Lista Exclusiva </span>
+                    </li>
+
+                    <li draggable="true" ondrag="dragging(event)" data-type="Textarea">
+                        <img src="assets/icons/text_area.png" class="inputComponentIcon">
+                        <span class="inputComponentText"> Texto livre </span>
+                    </li>
+                    <li draggable="true" ondrag="dragging(event)" data-type="File">
+                        <img src="assets/icons/upload.png" class="inputComponentIcon">
+                        <span class="inputComponentText"> Upload Ficheiro </span>
+                    </li>
+                </ul>
+                
+            </div>
+
 
         </div>
 
