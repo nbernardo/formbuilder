@@ -119,9 +119,11 @@ function newComponentLine(e) {
 
     removeLineBtn.innerHTML = `
         x Remover linha
-        <select class="editing_tabel" id="entityName${newLine.id}">
-            <option value="">Selecione a entidade</option>
-        </select>
+        <span class="fieldGroupModel">
+            <select class="editing_tabel" id="entityName${newLine.id}">
+                <option value="">Selecione a entidade</option>
+            </select>
+        </span>
     `;
     removeLineBtn.className = `top10px removeComponent lineRemover`;
 
@@ -140,11 +142,11 @@ function newComponentLine(e) {
 
     setTimeout(() => {
 
-        modelsNameLista.forEach((val) => {
+        Object.keys(modelsNameLista).forEach((val) => {
 
             let newModelName = document.createElement("option");
-            newModelName.value = val;
-            newModelName.innerText = val;
+            newModelName.value = modelsNameLista[val];
+            newModelName.innerText = modelsNameLista[val];
 
             document.getElementById(`entityName${newLine.id}`).appendChild(newModelName);
 

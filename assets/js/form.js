@@ -153,8 +153,7 @@ function resetOptionGroupContainer(ctx) {
 
 function newModel() {
 
-    //<img src="assets/icons/select.png" class="inputComponentIcon">
-    //<span class="inputComponentText"> Lista Exclusiva </span>
+    const componentId = `modelInputId${(new Date()).getTime()}`;
 
     console.log(`Chamou no inicio`);
     const container = document.getElementById("formConfigurationPanel");
@@ -170,12 +169,12 @@ function newModel() {
         console.log(`Adicionando novo dados`);
         const text = event.target.value;
         if (text != "")
-            addNewModel(text);
+            addNewModel({ val: text, id: event.target.id });
         console.log(`Novo daddo adicionado`);
 
     }
 
-    modelName.contentEditable = true;
+    modelName.id = componentId;
     modelName.style.marginLeft = "7px";
     modelName.style.marginTop = "3px";
     modelName.style.width = "130px";
@@ -196,23 +195,30 @@ function newModel() {
 
 }
 
-const modelsNameLista = [];
-function addNewModel(val) {
+const modelsNameLista = {};
+function addNewModel({ val, id }) {
 
-    if (!modelsNameLista.includes(val)) {
+    const modelLists = document.getElementsByClassName("fieldGroupModel");
+    modelsNameLista[id] = val;
 
-        const modelLists = document.getElementsByClassName("editing_tabel");
-        let newModel = document.createElement("option");
-        newModel.value = val;
-        newModel.innerText = val;
-        modelsNameLista.push(val);
+    let component = `
+        <select class="editing_tabel" id="entityName${id}">
+            <option value="">Selecione a entidade</option>
+    `;
 
-        for (var x = 0; x < modelLists.length; x++) {
+    const options = Object.keys(modelsNameLista);
+    for(let x = 0; x < options.length; x++){
+        let value = modelsNameLista[options[x]];
+        component += `<option value="${value}">${value}</option>`;
+    }
 
-            modelLists[x].appendChild(newModel);
+    component += `</select>`;
 
-        }
+    for (let x = 0; x < modelLists.length; x++) {
+
+        modelLists[x].innerHTML = component;
 
     }
+
 
 }
