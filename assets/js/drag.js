@@ -120,8 +120,8 @@ function newComponentLine(e) {
     removeLineBtn.innerHTML = `
         x Remover linha
         <span class="fieldGroupModel">
-            <select class="editing_tabel" id="entityName${newLine.id}">
-                <option value="">Selecione a entidade</option>
+            <select class="editing_tabel" onchange="setFieldsModelName(event)" id="entityName${newLine.id}">
+                <option value="" class="editing_tabel">Selecione a entidade</option>
             </select>
         </span>
     `;
@@ -142,19 +142,48 @@ function newComponentLine(e) {
 
     setTimeout(() => {
 
+        const optionsElm = document.getElementById(`entityName${newLine.id}`)
+
         Object.keys(modelsNameLista).forEach((val) => {
 
             let newModelName = document.createElement("option");
+            newModelName.className = "editing_tabel";
             newModelName.value = modelsNameLista[val];
             newModelName.innerText = modelsNameLista[val];
 
-            document.getElementById(`entityName${newLine.id}`).appendChild(newModelName);
+            optionsElm.appendChild(newModelName);
 
         })
         
 
     }, 300);
 
+
+}
+
+function setFieldsModelName(event){
+
+    alert(`CHanging`);
+    const fieldsContainer = event.target.parentNode.parentNode.nextSibling;
+    const allFields = fieldsContainer.getElementsByClassName("databaseField");
+    
+    //if(event.target)
+    for(let x = 0; x < allFields.length; x++){
+
+        console.log(`Cur field: ${allFields[x]}`);
+        allFields[x].dataset.model = event.target.value;
+        /*
+        let fieldName = allFields[idx].name.toString();
+        
+        if(fieldName.indexOf(".")){
+            fieldName = fieldName.split(".")[0];
+        }
+
+        allFields[idx].value = `${event.target.value}.${fieldName}`;
+        */
+    }
+    
+    console.log(fieldsContainer.innerHTML);
 
 }
 

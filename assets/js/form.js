@@ -202,14 +202,14 @@ function addNewModel({ val, id }) {
     modelsNameLista[id] = val;
 
     let component = `
-        <select class="editing_tabel" id="entityName${id}">
-            <option value="">Selecione a entidade</option>
+        <select class="editing_tabel" onchange="setFieldsModelName(event)" id="entityName${id}">
+            <option class="editing_tabel" value="">Selecione a entidade</option>
     `;
 
     const options = Object.keys(modelsNameLista);
     for(let x = 0; x < options.length; x++){
         let value = modelsNameLista[options[x]];
-        component += `<option value="${value}">${value}</option>`;
+        component += `<option class="editing_tabel" value="${value}">${value}</option>`;
     }
 
     component += `</select>`;

@@ -64,9 +64,12 @@ class Component {
 
             let comboBox = ctx.getElementsByTagName("select");
             if(comboBox.length > 0){
-                comboBox[0].name = extractProperIdValue(event.target.innerHTML);
-                comboBox[0].classList.add("databaseField");
+                
+                let modelName = comboBox[0].dataset.model ? `${comboBox[0].dataset.model}.` : "";
+                comboBox[0].name = `${modelName}${extractProperIdValue(event.target.innerHTML)}`;
+                //comboBox[0].classList.add("databaseField");
                 return;
+
             }
 
             //ctx.getElementsByTagName("input")[0].value = extractProperIdValue(event.target.innerHTML);
@@ -95,6 +98,7 @@ class Component {
     newInput({nome, placeholder, required}){
 
         let component = this.newComponent("input");
+        component.className = `databaseField`;
         let props = {nome, placeholder, required};
         let container = this.newContainer("span");
 
@@ -113,6 +117,7 @@ class Component {
         let component = this.newComponent("input");
         component.type = "radio";
         component.name = `optionGroup_${this.optionsName}`;
+        component.classList.add("databaseField")
         let label = this.newComponent("label");
         label.contentEditable = true;
         label.classList.add("optionLabel");
@@ -197,7 +202,7 @@ class Component {
 
         let component = newComponent("select");
         component.id = `${idSelect}`;
-        component.className = "top5px selectComponent";
+        component.className = "top5px selectComponent databaseField";
 
         let firstOption = newComponent("option");
         firstOption.innerHTML = "SELECCIONE";
@@ -217,6 +222,7 @@ class Component {
         let component = this.newComponent("input");
         component.type = "checkbox";
         component.name = `optionGroup_${this.optionsName}`;
+        component.className = `databaseField`;
         let label = this.newComponent("label");
         label.contentEditable = true;
         label.classList.add("optionLabel");
