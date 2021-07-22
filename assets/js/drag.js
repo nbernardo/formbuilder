@@ -119,7 +119,9 @@ function newComponentLine(e) {
 
     removeLineBtn.innerHTML = `
         x Remover linha
-        <label class='editing_tabel' style="font-weight: bold;" contenteditable="true">Grupo</label>
+        <select class="editing_tabel" id="entityName${newLine.id}">
+            <option value="">Selecione a entidade</option>
+        </select>
     `;
     removeLineBtn.className = `top10px removeComponent lineRemover`;
 
@@ -135,6 +137,22 @@ function newComponentLine(e) {
 
     document.getElementById("formArea").appendChild(removeLineBtn);
     document.getElementById("formArea").appendChild(newLine);
+
+    setTimeout(() => {
+
+        modelsNameLista.forEach((val) => {
+
+            let newModelName = document.createElement("option");
+            newModelName.value = val;
+            newModelName.innerText = val;
+
+            document.getElementById(`entityName${newLine.id}`).appendChild(newModelName);
+
+        })
+        
+
+    }, 300);
+
 
 }
 

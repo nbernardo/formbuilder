@@ -68,7 +68,7 @@ const saveForm = function () {
 
     for (let field in databaseFieldList) {
         let curField = databaseFieldList[field];
-       
+
         if (curField.nodeName)
             if (curField.name != "" && (curField.nodeName.toLowerCase() == "input" || curField.nodeName.toLowerCase() == "select"))
                 allDatabaseField[curField.name] = "";
@@ -151,7 +151,7 @@ function resetOptionGroupContainer(ctx) {
 }
 
 
-function newModel(){
+function newModel() {
 
     //<img src="assets/icons/select.png" class="inputComponentIcon">
     //<span class="inputComponentText"> Lista Exclusiva </span>
@@ -164,7 +164,17 @@ function newModel(){
     modelIcon.src = "assets/icons/data_model.png";
     modelIcon.className = "inputComponentIcon";
 
-    const modelName = document.createElement("input"); 
+    const modelName = document.createElement("input");
+    modelName.onblur = function (event) {
+
+        console.log(`Adicionando novo dados`);
+        const text = event.target.value;
+        if (text != "")
+            addNewModel(text);
+        console.log(`Novo daddo adicionado`);
+
+    }
+
     modelName.contentEditable = true;
     modelName.style.marginLeft = "7px";
     modelName.style.marginTop = "3px";
@@ -183,5 +193,26 @@ function newModel(){
     modelsList.appendChild(modelLine);
 
     console.log(`Chamou no fim`);
+
+}
+
+const modelsNameLista = [];
+function addNewModel(val) {
+
+    if (!modelsNameLista.includes(val)) {
+
+        const modelLists = document.getElementsByClassName("editing_tabel");
+        let newModel = document.createElement("option");
+        newModel.value = val;
+        newModel.innerText = val;
+        modelsNameLista.push(val);
+
+        for (var x = 0; x < modelLists.length; x++) {
+
+            modelLists[x].appendChild(newModel);
+
+        }
+
+    }
 
 }
