@@ -2,12 +2,12 @@ class Component {
 
     optionsName;
 
-    newComponent(type){
+    newComponent(type) {
         return document.createElement(type);
     }
 
-    newContainer(type){
-        
+    newContainer(type) {
+
         let container = this.newComponent(type);
         let removeBtn = this.newComponent("span");
 
@@ -21,12 +21,12 @@ class Component {
         removeBtn.className = "posAbsolute removeComponent";
 
         removeBtn.addEventListener('click', (event) => {
-            
+
             let container = event.target.parentNode;
             let targetedLine = container.parentNode;
             targetedLine.removeChild(container);
-            
-            if(targetedLine.innerHTML == ""){
+
+            if (targetedLine.innerHTML == "") {
                 targetedLine.innerHTML = drag.LINEPLACEHOLDER;
                 targetedLine.style.color = "lightgrey";
             }
@@ -38,7 +38,7 @@ class Component {
 
     }
 
-    newGroup(){
+    newGroup() {
 
         const container = this.newComponent("div");
         const group = this.newComponent("fieldset");
@@ -53,36 +53,33 @@ class Component {
 
     }
 
-    newLabel(ctx){
-        
+    newLabel(ctx) {
+
         const lable = document.createElement("label");
         lable.contentEditable = true;
         lable.className = "formInputLabel paddingRight10px paddingLeft10px textBold";
         lable.innerHTML = "Nome do campo";
 
-        lable.onkeyup = function(event){
+        lable.onkeyup = function (event) {
 
             let comboBox = ctx.getElementsByTagName("select");
-            if(comboBox.length > 0){
-                
-                let modelName = comboBox[0].dataset.model ? `${comboBox[0].dataset.model}.` : "";
-                comboBox[0].name = `${modelName}${extractProperIdValue(event.target.innerHTML)}`;
-                //comboBox[0].classList.add("databaseField");
+            if (comboBox.length > 0) {
+                comboBox[0].name = extractProperIdValue(event.target.innerHTML);
+                comboBox[0].classList.add("databaseField");
                 return;
-
             }
 
             //ctx.getElementsByTagName("input")[0].value = extractProperIdValue(event.target.innerHTML);
             const inputFields = ctx.getElementsByTagName("input");
             const totalFields = inputFields.length;
 
-            if(totalFields == 1){
+            if (totalFields == 1) {
                 ctx.getElementsByTagName("input")[0].name = extractProperIdValue(event.target.innerHTML);
                 ctx.getElementsByTagName("input")[0].classList.add("databaseField");
             }
 
-            if(totalFields > 1){
-                for(let x = 0; x < totalFields; x++){
+            if (totalFields > 1) {
+                for (let x = 0; x < totalFields; x++) {
                     ctx.getElementsByTagName("input")[x].name = extractProperIdValue(event.target.innerHTML);
                     ctx.getElementsByTagName("input")[x].classList.add("databaseField");
                 }
@@ -95,16 +92,19 @@ class Component {
 
     }
 
-    newInput({nome, placeholder, required}){
+    newInput({ nome, placeholder, required, model }) {
 
         let component = this.newComponent("input");
         component.className = `databaseField`;
-        let props = {nome, placeholder, required};
+        let props = { nome, placeholder, required };
         let container = this.newContainer("span");
 
-        for(let prop in props)
+        if (model)
+            component.dataset.model = model
+
+        for (let prop in props)
             component[prop] = props[prop];
-        
+
         console.log(`Creating Input component from class`);
         container.appendChild(this.newLabel(container));
         container.appendChild(component);
@@ -112,9 +112,14 @@ class Component {
 
     }
 
-    generateRadio(optionsContainer, values, value){
+    generateRadio(optionsContainer, values, value, model) {
 
         let component = this.newComponent("input");
+
+        if (model)
+            component.dataset.model = model
+
+
         component.type = "radio";
         component.name = `optionGroup_${this.optionsName}`;
         component.classList.add("databaseField")
@@ -135,7 +140,7 @@ class Component {
 
     }
 
-    newRadio({nome, placeholder, required, options}){
+    newRadio({ nome, placeholder, required, options, model }) {
 
         let container = this.newContainer("span");
         let optionsContainer = this.newComponent("div");
@@ -147,9 +152,9 @@ class Component {
         const values = options ? [...options] : ["Opção1", "Opção2"];
         container.appendChild(this.newLabel(container));
 
-        for(let value in values){
+        for (let value in values) {
 
-            let optionsResult = this.generateRadio(optionsContainer, values, value);
+            let optionsResult = this.generateRadio(optionsContainer, values, value, model);
             container.appendChild(optionsResult);
 
         }
@@ -160,16 +165,16 @@ class Component {
     }
 
 
-    newSelect(){
+    newSelect({model}) {
 
         let idNum = (new Date()).getTime();
         let idSelect = `select_${idNum}`;
         const newComponent = this.newComponent;
 
-        const addButton = function(id){
+        const addButton = function (id) {
 
             let inputValue = document.getElementById(`newText_${id}`);
-            if(inputValue.value == "") return false;
+            if (inputValue.value == "") return false;
 
             let totalOptions = document.getElementById(idSelect).getElementsByTagName("option").length;
             let newOption = newComponent("option");
@@ -203,6 +208,9 @@ class Component {
         let component = newComponent("select");
         component.id = `${idSelect}`;
         component.className = "top5px selectComponent databaseField";
+        if (model)
+            component.dataset.model = model
+
 
         let firstOption = newComponent("option");
         firstOption.innerHTML = "SELECCIONE";
@@ -217,12 +225,14 @@ class Component {
 
 
 
-    generateCheck(optionsContainer, values, value){
+    generateCheck(optionsContainer, values, value, model) {
 
         let component = this.newComponent("input");
+        if (model)
+            component.dataset.model = model
+
         component.type = "checkbox";
         component.name = `optionGroup_${this.optionsName}`;
-        component.className = `databaseField`;
         let label = this.newComponent("label");
         label.contentEditable = true;
         label.classList.add("optionLabel");
@@ -240,7 +250,7 @@ class Component {
 
     }
 
-    newCheck({nome, placeholder, required, options}){
+    newCheck({ nome, placeholder, required, options, model }) {
 
         let container = this.newContainer("span");
         let optionsContainer = this.newComponent("div");
@@ -252,9 +262,9 @@ class Component {
         const values = options ? [...options] : ["Opção1", "Opção2"];
         container.appendChild(this.newLabel(container));
 
-        for(let value in values){
+        for (let value in values) {
 
-            let optionsResult = this.generateCheck(optionsContainer, values, value);
+            let optionsResult = this.generateCheck(optionsContainer, values, value, model);
             container.appendChild(optionsResult);
 
         }

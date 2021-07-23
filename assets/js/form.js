@@ -68,10 +68,17 @@ const saveForm = function () {
 
     for (let field in databaseFieldList) {
         let curField = databaseFieldList[field];
+        console.log(`Existing field: ${curField}`);
+        //let modelName = curField.dataset.model ? `${curField.dataset.model}.` : "";
+        //let modelName = "";
 
-        if (curField.nodeName)
-            if (curField.name != "" && (curField.nodeName.toLowerCase() == "input" || curField.nodeName.toLowerCase() == "select"))
-                allDatabaseField[curField.name] = "";
+        if (curField.nodeName) {
+
+            if (curField.name != "" && (curField.nodeName.toLowerCase() == "input" || curField.nodeName.toLowerCase() == "select")) {
+                let modelName = curField.dataset.model ? `${curField.dataset.model}.` : "";
+                allDatabaseField[`${modelName}${curField.name}`] = "";
+            }
+        }
 
     }
 
@@ -207,7 +214,7 @@ function addNewModel({ val, id }) {
     `;
 
     const options = Object.keys(modelsNameLista);
-    for(let x = 0; x < options.length; x++){
+    for (let x = 0; x < options.length; x++) {
         let value = modelsNameLista[options[x]];
         component += `<option class="editing_tabel" value="${value}">${value}</option>`;
     }

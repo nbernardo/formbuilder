@@ -1,9 +1,9 @@
 const movingComponent = {
     type: null,
     props: {},
-    create: function () {
+    create: function (model) {
 
-        const values = {...movingComponent.props};
+        const values = {...movingComponent.props, model};
         const component = new Component();
         console.log(`Moving the component: ${movingComponent.type}`);
         return component[`new${movingComponent.type}`](values);
@@ -20,15 +20,23 @@ const drag = {
 function newComponen(e) {
 
     e.preventDefault();
-    const newComponent = movingComponent.create();
+    const dataModelComponent = e.target.previousSibling.getElementsByTagName("select");
+
+    const dataModel = dataModelComponent[0].value;
+    const newComponent = movingComponent.create(dataModel);
     
     if (document.getElementById(`${e.target.id}`).innerHTML == LINEPLACEHOLDER) {
         document.getElementById(`${e.target.id}`).innerHTML = "";
         document.getElementById(`${e.target.id}`).style.color = "black";
     }
 
+    
+    console.log(newComponen);
+    //newComponen.dataset.model = dataModel;
     document.getElementById(`${e.target.id}`).appendChild(newComponent);
     e.target.style.background = "white";
+
+    console.log(`Depositado o componente: `,);
 
 }
 

@@ -19,6 +19,63 @@ app.use(require("body-parser")());
 
 app.listen(PORT, () => console.log(`Servico rodando em ${PORT}`));
 
+/**
+ * @param {Array} fields 
+ */
+const parseFieldAndModels = function (fields, defaultModel = "MainModel") {
+
+    fieldsAndModels = {};
+
+    let curModel;
+    let curField;
+
+    for (let x = 0; x < fields.length; x++) {
+
+        curField = fields[x];
+        if (fields[x].indexOf(".") >= 0) {
+
+            curModel = fields[x].split(".")[0];
+            curField = fields[x].split(".")[1];
+
+        }
+
+        if (curModel) {
+
+            if (!fieldsAndModels[curModel]) fieldsAndModels[curModel] = [];
+            fieldsAndModels[curModel].push(curField);
+
+        }
+
+        curModel = defaultModel;
+
+    }
+
+    console.log(`All fields:`);
+    console.log(fieldsAndModels);
+
+    return fieldsAndModels;
+
+}
+
+const generateModels = function (databaseFields) {
+
+
+    const modelsAndFields = parseFieldAndModels(databaseFields);
+    const models = Object.keys(modelsAndFields);
+
+    for (modelName of models) {
+
+        const modelGenerator = new ModelGenerator(modelName);
+        modelGenerator.fields = modelsAndFields[modelName];
+        modelGenerator
+            .newModel()
+            .createOnFs(fs)
+            .createTable(PostgresInstance);
+
+    }
+
+}
+
 app.post("/newForm", (req, client) => {
 
     const formContent = req.body;
@@ -27,6 +84,9 @@ app.post("/newForm", (req, client) => {
     console.log(databaseFields);
     client.send("Process done!");
 
+    generateModels(databaseFields);
+
+    return;
     formContent.entityName = `MaisUmModel`;
     const objectName = formContent.entityName || `NewObject_${(new Date).getTime()}`;
 
@@ -43,7 +103,7 @@ app.post("/newForm", (req, client) => {
         .createOnFs();
 
     //Import the new generated controller
-    const stream = fs.createWriteStream("index.js",{flags: "a"});
+    const stream = fs.createWriteStream("index.js", { flags: "a" });
     stream.once('open', (fd) => {
         stream.write(controllerGenerator.importController());
     });
@@ -69,11 +129,8 @@ app.post("/newForm", (req, client) => {
 
 app.get("/form-list", (req, client) => {
 
-   fs.readdir("../frontend", (err, files) => {
-        client.send({files});
-   })
+    fs.readdir("../frontend", (err, files) => {
+        client.send({ files });
+    })
 
 })
-
-const MaisUmModelController = require("./controllers/business/MaisUmModel");
-app.use("/maisummodel",MaisUmModelController);
