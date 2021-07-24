@@ -64,7 +64,7 @@ const extractProperIdValue = function (text) {
 //console.log(result);
 
 
-
+/** Input config helper functions */
 const showConfig = function (idComponente) {
     document.getElementById(idComponente).style.display = "";
     GlobalFacade.activeFieldConfig.push(idComponente)
@@ -74,24 +74,104 @@ const hideConfig = function (idComponente) {
     document.getElementById(idComponente).style.display = "none";
 }
 
-
-const GlobalFacade = {
-    activeFieldConfig: []
+const showRequiredMessageInput = function (idComponente, status) {
+    let statusVal = { "true": "block", "false": "none" };
+    document.getElementById(idComponente).style.display = statusVal[status];
 }
 
-window.onclick = function(event){
+const inputConfigMenuContent = ({componentId, inputId}) => (
+
+    `                    
+    <img
+    onclick="showConfig('${componentId}')"
+    data-panel="${componentId}"
+    src="assets/icons/config.png" 
+    class="inputComponentIcon inputConfigIcon">
+
+    <span
+        onmouseover="showConfig('${componentId}')"  
+        class="inputConfigPanel"
+        style="display:none;" 
+        id="${componentId}">
+
+        <span
+            onclick="hideConfig('${componentId}')" 
+            class="posAbsolute removeComponent">
+            x
+        </span>
+
+        <ul data-input="${inputId}" data-panel="${componentId}">
+            <li>
+                <label>Obrigatório:</label> 
+                <input 
+                    type="checkbox" 
+                    onchange="showRequiredMessageInput('reqMsg${componentId}',this.checked);defConfigProp('${inputId}',{prop: 'required', value: this.checked});">
+            </li>
+            <li id="reqMsg${componentId}" style="display:none;">
+                <label>Mensagem erro:</label> 
+                <input type="text">
+            </li>
+
+            <li>
+                <label>Texto guia:</label> 
+                <input type="text">
+            </li>
+            <li>
+                <label>Tipo de dados:</label> 
+                <select type="text">
+                    <option value="Char">Texto</option>
+                    <option value="Text">Texto longo</option>
+                    <option value="Int">Numero</option>
+                    <option value="Float">Fração</option>
+                </select>
+            </li>
+            <li>
+                <label>Qtd caracters:</label> 
+                <input type="number">
+            </li>
+        </ul>
+    </span>
+    `
+
+)
+
+
+const defConfigProp = function(idInput, {data, prop, value}){
+
+    const component = document.getElementById(idInput);
+    if(prop){
+        component[prop] = value;
+        return;
+    }
+
+    component.dataset[data] = value;
+
+}
+
+
+const GlobalFacade = {
+    activeFieldConfig: [],
+    inputConfigMenuContent
+}
+
+
+
+
+window.onclick = function (event) {
 
     let activedConfigs = GlobalFacade.activeFieldConfig;
     let clickedConfig = undefined;
-    
-    if(clickedConfig = event.target.dataset.panel){
+
+    if (clickedConfig = event.target.dataset.panel) {
+        activedConfigs = activedConfigs.filter((v) => v != clickedConfig);
+    }
+
+    if (clickedConfig = event.target.parentNode.parentNode.dataset.panel) {
         activedConfigs = activedConfigs.filter((v) => v != clickedConfig);
     }
 
     activedConfigs.forEach((v) => {
         document.getElementById(v).style.display = "none";
     })
-
-    console.log(`Clicou agora`);
 
 }

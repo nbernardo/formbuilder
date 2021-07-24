@@ -30,6 +30,7 @@ const previewForm = function () {
         resetLabelPos(context);
         resetFormLines(context);
         resetSelectPos(context);
+        removeConfigButtons(context);
         resetOptionGroupContainer(context);
         document.getElementById("previewFormContainer").style.display = "";
 
@@ -99,6 +100,15 @@ function removeNewOptionContainer(ctx) {
     let allContainers = ctx.getElementsByClassName("newOptionContainer");
     for (let idx = 0; idx < allContainers.length; idx++) {
         allContainers[idx].style.display = "none";
+    }
+
+}
+
+function removeConfigButtons(ctx) {
+
+    let allConfigs = ctx.getElementsByClassName("inputComponentIcon");
+    for (let idx = 0; idx < allConfigs.length; idx++) {
+        allConfigs[idx].style.display = "none";
     }
 
 }

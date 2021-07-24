@@ -6,47 +6,14 @@ class Component {
         return document.createElement(type);
     }
 
-    newConfig(){
+    newConfig(inputId){
 
         const componentId = `inputConfig${(new Date()).getTime()}`;
 
         const container = this.newComponent("span");
         container.className = "floatLeft";
-        container.innerHTML = `
-                    <img
-                        onclick="showConfig('${componentId}')"
-                        data-panel="${componentId}"
-                        src="assets/icons/config.png" 
-                        class="inputComponentIcon inputConfigIcon">
-                    
-                    <span
-                        onmouseover="showConfig('${componentId}')"  
-                        class="inputConfigPanel"
-                        style="display:none;" 
-                        id="${componentId}">
-
-                        <span
-                            onclick="hideConfig('${componentId}')" 
-                            class="posAbsolute removeComponent">
-                            x
-                        </span>
-
-                        <ul>
-                            <li>
-                                Tipo de dados: 
-                                <select type="text">
-                                    <option value="Char">Texto</option>
-                                    <option value="Text">Texto longo</option>
-                                    <option value="Int">Numero</option>
-                                    <option value="Float">Fração</option>
-                                </select>
-                            </li>
-                            <li>
-                                Qtd caracters: <input type="number">
-                            </li>
-                        </ul>
-                    </span>
-        `;
+        container.innerHTML = GlobalFacade
+                                .inputConfigMenuContent({componentId,inputId});
 
         return container;
 
@@ -137,7 +104,11 @@ class Component {
     newInput({ nome, placeholder, required, model }) {
 
         let component = this.newComponent("input");
+        const inputId = `inputId${(new Date()).getTime()}`;
+        
         component.className = `databaseField`;
+        component.id = inputId;
+
         let props = { nome, placeholder, required };
         let container = this.newContainer("span");
 
@@ -150,7 +121,7 @@ class Component {
         console.log(`Creating Input component from class`);
         container.appendChild(this.newLabel(container));
         container.appendChild(component);
-        container.appendChild(this.newConfig());
+        container.appendChild(this.newConfig(inputId));
 
         return container;
 

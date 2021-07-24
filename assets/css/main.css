@@ -245,3 +245,7 @@ ul.modelPannel li:first-child{
     list-style: none;
     margin-bottom: 5px;
 }
+
+.inputConfigPanel ul li label{
+    display: block;
+}
