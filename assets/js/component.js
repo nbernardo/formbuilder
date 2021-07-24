@@ -6,6 +6,52 @@ class Component {
         return document.createElement(type);
     }
 
+    newConfig(){
+
+        const componentId = `inputConfig${(new Date()).getTime()}`;
+
+        const container = this.newComponent("span");
+        container.className = "floatLeft";
+        container.innerHTML = `
+                    <img
+                        onclick="showConfig('${componentId}')"
+                        data-panel="${componentId}"
+                        src="assets/icons/config.png" 
+                        class="inputComponentIcon inputConfigIcon">
+                    
+                    <span
+                        onmouseover="showConfig('${componentId}')"  
+                        class="inputConfigPanel"
+                        style="display:none;" 
+                        id="${componentId}">
+
+                        <span
+                            onclick="hideConfig('${componentId}')" 
+                            class="posAbsolute removeComponent">
+                            x
+                        </span>
+
+                        <ul>
+                            <li>
+                                Tipo de dados: 
+                                <select type="text">
+                                    <option value="Char">Texto</option>
+                                    <option value="Text">Texto longo</option>
+                                    <option value="Int">Numero</option>
+                                    <option value="Float">Fração</option>
+                                </select>
+                            </li>
+                            <li>
+                                Qtd caracters: <input type="number">
+                            </li>
+                        </ul>
+                    </span>
+        `;
+
+        return container;
+
+    }
+
     newContainer(type) {
 
         let container = this.newComponent(type);
@@ -84,12 +130,8 @@ class Component {
                     ctx.getElementsByTagName("input")[x].classList.add("databaseField");
                 }
             }
-
-
         }
-
         return lable;
-
     }
 
     newInput({ nome, placeholder, required, model }) {
@@ -108,6 +150,8 @@ class Component {
         console.log(`Creating Input component from class`);
         container.appendChild(this.newLabel(container));
         container.appendChild(component);
+        container.appendChild(this.newConfig());
+
         return container;
 
     }
@@ -158,7 +202,7 @@ class Component {
             container.appendChild(optionsResult);
 
         }
-
+        container.appendChild(this.newConfig());
         console.log(`Creating Radio component`);
         return container;
 
@@ -218,6 +262,7 @@ class Component {
 
         component.appendChild(firstOption);
         container.appendChild(component);
+        container.appendChild(this.newConfig());
 
         return container;
 
@@ -270,6 +315,7 @@ class Component {
         }
 
         console.log(`Creating Radio component`);
+        container.appendChild(this.newConfig());
         return container;
 
     }
