@@ -74,9 +74,14 @@ const hideConfig = function (idComponente) {
     document.getElementById(idComponente).style.display = "none";
 }
 
-const showRequiredMessageInput = function (idComponente, status) {
+const showRequiredMessageInput = function (idComponente, status, idInput) {
+
     let statusVal = { "true": "block", "false": "none" };
     document.getElementById(idComponente).style.display = statusVal[status];
+
+    const component = document.getElementById(idInput);
+    component.classList.add("requiredInputOnSubmission");
+
 }
 
 const inputConfigMenuContent = ({componentId, inputId}) => (
@@ -105,20 +110,27 @@ const inputConfigMenuContent = ({componentId, inputId}) => (
                 <label>Obrigatório:</label> 
                 <input 
                     type="checkbox" 
-                    onchange="showRequiredMessageInput('reqMsg${componentId}',this.checked);defConfigProp('${inputId}',{prop: 'required', value: this.checked});">
+                    onchange="showRequiredMessageInput('reqMsg${componentId}',this.checked,'${inputId}');defConfigProp('${inputId}',{prop: 'required', value: this.checked});">
             </li>
             <li id="reqMsg${componentId}" style="display:none;">
                 <label>Mensagem erro:</label> 
-                <input type="text">
+                <input
+                    onkeyup="defConfigProp('${inputId}',{data: 'requiredMessage', value: this.value});" 
+                    type="text">
             </li>
 
             <li>
                 <label>Texto guia:</label> 
-                <input type="text">
+                <input 
+                    type="text"
+                    onkeyup="defConfigProp('${inputId}',{prop: 'placeholder', value: (this.value != '' ? this.value : 'Digite um texto')});"
+                    >
             </li>
             <li>
                 <label>Tipo de dados:</label> 
-                <select type="text">
+                <select 
+                    onchange="defConfigProp('${inputId}',{data: 'type', value: this.value});"
+                    type="text">
                     <option value="Char">Texto</option>
                     <option value="Text">Texto longo</option>
                     <option value="Int">Numero</option>
@@ -127,7 +139,9 @@ const inputConfigMenuContent = ({componentId, inputId}) => (
             </li>
             <li>
                 <label>Qtd caracters:</label> 
-                <input type="number">
+                <input 
+                    onkeyup="defConfigProp('${inputId}',{data: 'size', value: this.value});"
+                    type="number">
             </li>
         </ul>
     </span>
@@ -167,6 +181,10 @@ window.onclick = function (event) {
     }
 
     if (clickedConfig = event.target.parentNode.parentNode.dataset.panel) {
+        activedConfigs = activedConfigs.filter((v) => v != clickedConfig);
+    }
+
+    if (clickedConfig = event.target.parentNode.parentNode.parentNode.dataset.panel) {
         activedConfigs = activedConfigs.filter((v) => v != clickedConfig);
     }
 
