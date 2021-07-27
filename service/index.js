@@ -59,7 +59,6 @@ const parseFieldAndModels = function (fields, defaultModel = "MainModel") {
 
 const generateModels = function (databaseFields) {
 
-
     const modelsAndFields = parseFieldAndModels(databaseFields);
     const models = Object.keys(modelsAndFields);
 
@@ -74,33 +73,42 @@ const generateModels = function (databaseFields) {
 
     }
 
+    return models;
+
 }
 
 app.post("/newForm", (req, client) => {
 
     const formContent = req.body;
+    console.log(`Conteudo enviado`);
+    console.log(formContent);
     //const beautyFormContent = xmlBeauty(formContent);
     const databaseFields = Object.keys(JSON.parse(formContent.databaseFields));
+    const formName = formContent.statedFormName;
+    console.log(`Campos achados`);
     console.log(databaseFields);
     client.send("Process done!");
 
-    generateModels(databaseFields);
+    const modelList = generateModels(databaseFields);
 
-    return;
-    formContent.entityName = `MaisUmModel`;
+    formContent.entityName = formName;
     const objectName = formContent.entityName || `NewObject_${(new Date).getTime()}`;
 
+    /*
     const modelGenerator = new ModelGenerator(objectName);
     modelGenerator.fields = databaseFields;
     modelGenerator
         .newModel()
         .createOnFs(fs)
         .createTable(PostgresInstance);
+    */
 
     const controllerGenerator = new ControllerGenerator(objectName);
+    controllerGenerator.modelList = modelList;
     controllerGenerator
         .newController(fs)
         .createOnFs();
+
 
     //Import the new generated controller
     const stream = fs.createWriteStream("index.js", { flags: "a" });
@@ -119,9 +127,7 @@ app.post("/newForm", (req, client) => {
     let viewContent = `${cssContent}\n\n${formContent.formContent}\n\n${viewControllerContent}`;
 
     fs.writeFile(`${frontEndPath}/${objectName}.html`, viewContent, (err) => {
-
         console.log(`Executou a criacao do ficheiro: `, err);
-
     });
 
 })

@@ -62,7 +62,7 @@ module.exports = class ModelGenerator {
     */
     createTable(dbInstance){
 
-        let queryString = `CREATE TABLE ${this.tableName}(\n`;
+        let queryString = `CREATE TABLE IF NOT EXISTS ${this.modelName || this.tableName}(\n`;
         const fields = this.fields;
 
         for(let idx in fields){
@@ -100,7 +100,7 @@ module.exports = class ModelGenerator {
 
     generateSaveString(){
 
-        let queryString = `INSERT INTO ${this.tableName} (fields) VALUES (`;
+        let queryString = `INSERT INTO ${this.modelName || this.tableName} (fields) VALUES (`;
         const fields = this.fields;
 
         queryString += this.getModelFields().value();
@@ -113,7 +113,7 @@ module.exports = class ModelGenerator {
 
     generateFindString(){
 
-        let queryString = `SELECT ${this.getModelFields().name()} FROM ${this.tableName}`;
+        let queryString = `SELECT ${this.getModelFields().name()} FROM ${this.modelName || this.tableName}`;
         return queryString;
 
     }

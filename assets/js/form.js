@@ -1,5 +1,5 @@
 const CLOSEBTN = `<br><span class="closePreview btnAbb" onclick="closePreview()">X</span><br><br>`;
-const SAVEBTN = `<button onclick="saveForm()" id="formSaveButton" type="button">Salvar Formulário</button><br>`;
+const SAVEBTN = `<input id="statedFormName" size="100"><button onclick="saveForm()" id="formSaveButton" type="button">Salvar Formulário</button><br>`;
 
 
 function closePreview() {
@@ -32,6 +32,7 @@ const previewForm = function () {
         resetSelectPos(context);
         removeConfigButtons(context);
         resetOptionGroupContainer(context);
+        removeConfigContnent(context);
         document.getElementById("previewFormContainer").style.display = "";
 
     }, 500);
@@ -47,6 +48,7 @@ const sendForm = function (content, fields = "") {
     const form = new FormData();
     form.append("formContent", content);
     form.append("databaseFields", JSON.stringify(fields));
+    form.append("statedFormName", document.getElementById("statedFormName").value);
 
     xhr.send(form);
 
@@ -130,6 +132,18 @@ function resetLabelPos(ctx) {
         allContainers[idx].classList.remove("paddingLeft10px");
         allContainers[idx].contentEditable = false;
     }
+
+}
+
+function removeConfigContnent(ctx){
+
+    /*
+    let allConfigs = ctx.getElementsByClassName("inputConfigPanel");
+
+    for (let idx = 0; idx < allConfigs.length; idx++) {
+        allConfigs[idx].parentNode.removeChild(allConfigs[idx]);
+    }
+    */
 
 }
 

@@ -5,9 +5,9 @@ class ViewControllerGenerator {
 
     static newController(fs, endpoint, method) {
 
-        console.log(`Novo controller`);
+        //console.log(`Novo controller`);
         let jsonRequest = fs.readFileSync(`./util/templates/postJSONRequest.js`,'utf8');
-        console.log(`File content:`);
+        //console.log(`File content:`);
         const PORT = process.env.PORT | 5000;
     
         /**
@@ -28,7 +28,8 @@ class ViewControllerGenerator {
 
     static newBackController(fs){
 
-        let backendControllerContent = fs.readFileSync(`./util/templates/backendController.js`,'utf8');
+        //let backendControllerContent = fs.readFileSync(`./util/templates/backendController.js`,'utf8');
+        let backendControllerContent = fs.readFileSync(`./util/templates/backendMultimodelController.js`,'utf8');
         return `${backendControllerContent}`;
 
     }

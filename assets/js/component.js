@@ -66,17 +66,17 @@ class Component {
 
     }
 
-    newLabel(ctx) {
-
+    newLabel(ctx){
+        
         const lable = document.createElement("label");
         lable.contentEditable = true;
         lable.className = "formInputLabel paddingRight10px paddingLeft10px textBold";
         lable.innerHTML = "Nome do campo";
 
-        lable.onkeyup = function (event) {
+        lable.onkeyup = function(event){
 
             let comboBox = ctx.getElementsByTagName("select");
-            if (comboBox.length > 0) {
+            if(comboBox.length > 0 && !comboBox[0].classList.contains("notConsiderDataField")){
                 comboBox[0].name = extractProperIdValue(event.target.innerHTML);
                 comboBox[0].classList.add("databaseField");
                 return;
@@ -86,19 +86,23 @@ class Component {
             const inputFields = ctx.getElementsByTagName("input");
             const totalFields = inputFields.length;
 
-            if (totalFields == 1) {
+            if(totalFields == 1 && !comboBox[0].classList.contains("notConsiderDataField")){
                 ctx.getElementsByTagName("input")[0].name = extractProperIdValue(event.target.innerHTML);
                 ctx.getElementsByTagName("input")[0].classList.add("databaseField");
             }
 
-            if (totalFields > 1) {
-                for (let x = 0; x < totalFields; x++) {
+            if(totalFields > 1 && !comboBox[0].classList.contains("notConsiderDataField")){
+                for(let x = 0; x < totalFields; x++){
                     ctx.getElementsByTagName("input")[x].name = extractProperIdValue(event.target.innerHTML);
                     ctx.getElementsByTagName("input")[x].classList.add("databaseField");
                 }
             }
+
+
         }
+
         return lable;
+
     }
 
     newInput({ nome, placeholder, required, model }) {
