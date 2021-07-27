@@ -1,5 +1,5 @@
 const CLOSEBTN = `<br><span class="closePreview btnAbb" onclick="closePreview()">X</span><br><br>`;
-const SAVEBTN = `<button onclick="saveForm()" id="formSaveButton" type="button">Salvar Formulário</button><br>`;
+const SAVEBTN = `<input id="statedFormName" size="100"><button onclick="saveForm()" id="formSaveButton" type="button">Salvar Formulário</button><br>`;
 
 
 function closePreview() {
@@ -47,6 +47,7 @@ const sendForm = function (content, fields = "") {
     const form = new FormData();
     form.append("formContent", content);
     form.append("databaseFields", JSON.stringify(fields));
+    form.append("statedFormName", document.getElementById("statedFormName").value);
 
     xhr.send(form);
 
@@ -77,7 +78,8 @@ const saveForm = function () {
 
             if (curField.name != "" && (curField.nodeName.toLowerCase() == "input" || curField.nodeName.toLowerCase() == "select")) {
                 let modelName = curField.dataset.model ? `${curField.dataset.model}.` : "";
-                allDatabaseField[`${modelName}${curField.name}`] = "";
+                if (!Object.keys(allDatabaseField).includes(`${modelName}${curField.name}`))
+                    allDatabaseField[`${modelName}${curField.name}`] = "";
             }
         }
 

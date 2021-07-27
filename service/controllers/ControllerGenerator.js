@@ -9,6 +9,7 @@ class ControllerGenerator {
     controllerContent;
     controllerName = null;
     fileSystem = null;
+    modelList = [];
 
     constructor(name){
         this.controllerName = name;
@@ -31,12 +32,19 @@ class ControllerGenerator {
         let controllerRouter = `${this.setupRouter()}\n\n`;
         let controllerContent = ViewControllerGenerator.newBackController(fs);
 
-        console.log(`Controller content: `);
-        console.log(controllerContent);
+        if(this.modelList.length > 0){
+
+            const allModels = '"'+this.modelList.join(`","`)+'"';
+            this.controllerContent = `${controllerRouter}${controllerContent.replace("#models",allModels)}`;  
+            //console.log(`Multi models`);
+            //console.log(allModels);
+
+        }
+        //console.log(`Controller content: `);
+        //console.log(controllerContent);
 
         //controllerContent = controllerContent.replace("#controllerName",this.controllerName);
-
-        this.controllerContent = `${controllerRouter}${controllerContent.replace("#controllerName",this.controllerName)}`;
+        //this.controllerContent = `${controllerRouter}${controllerContent.replace("#controllerName",this.controllerName)}`;
 
         return this;
 
