@@ -62,7 +62,7 @@ module.exports = class ModelGenerator {
     */
     createTable(dbInstance){
 
-        let queryString = `CREATE TABLE IF NOT EXISTS ${this.modelName || this.tableName}(\n`;
+        let queryString = `CREATE TABLE ${this.modelName || this.tableName}(\n`;
         const fields = this.fields;
 
         for(let idx in fields){

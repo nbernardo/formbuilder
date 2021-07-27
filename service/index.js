@@ -141,5 +141,6 @@ app.get("/form-list", (req, client) => {
 
 })
 
-const MaisUmFormController = require("./controllers/business/MaisUmForm");
-app.use("/maisumform",MaisUmFormController);
+
+const CadastroDeCarroController = require("./controllers/business/CadastroDeCarro");
+app.use("/cadastrodecarro",CadastroDeCarroController);
