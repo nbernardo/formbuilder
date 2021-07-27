@@ -79,7 +79,8 @@ const saveForm = function () {
 
             if (curField.name != "" && (curField.nodeName.toLowerCase() == "input" || curField.nodeName.toLowerCase() == "select")) {
                 let modelName = curField.dataset.model ? `${curField.dataset.model}.` : "";
-                allDatabaseField[`${modelName}${curField.name}`] = "";
+                if (!Object.keys(allDatabaseField).includes(`${modelName}${curField.name}`))
+                    allDatabaseField[`${modelName}${curField.name}`] = "";
             }
         }
 

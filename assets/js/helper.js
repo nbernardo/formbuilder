@@ -129,8 +129,8 @@ const inputConfigMenuContent = ({componentId, inputId}) => (
             <li>
                 <label>Tipo de dados:</label> 
                 <select 
-                    class="notConsiderDataField"
-                    onchange="defConfigProp('${inputId}',{data: 'type', value: this.value});" data-config=true
+                    class="notDataFieldConsider"
+                    onchange="defConfigProp('${inputId}',{data: 'type', value: this.value});"
                     type="text">
                     <option value="Char">Texto</option>
                     <option value="Text">Texto longo</option>

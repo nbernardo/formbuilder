@@ -140,3 +140,7 @@ app.get("/form-list", (req, client) => {
     })
 
 })
+
+
+const CadastroDeCarroController = require("./controllers/business/CadastroDeCarro");
+app.use("/cadastrodecarro",CadastroDeCarroController);

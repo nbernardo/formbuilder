@@ -5,7 +5,6 @@ class PostgresInstance extends DBInstance {
 
 
     pool = new Pool({
-        //connectionString: `postgres://postgres:1234@localhost:5432/geocad_poc_alt`
         connectionString: `postgres://postgres:1234@localhost:5432/form`
     });
 

@@ -11,17 +11,10 @@ router.post("/save", (req, client) => {
     let fieldsValue = {};
 
     for(let model of listOfModels){
+        
         modelsMap[model] = require(`../../models/business/${model}`);
-    }
 
-    for(let model in listOfModels){
-        fieldsValue[model] = content[model];
-    }
-
-    const submittedModels = Object.keys(fieldsValue);
-    for(let model in submittedModels){
-
-        let fields = Object.keys(fieldsValue[model]);
+        let fields = content[model];
         for(let field in fields){
             modelsMap[model][field] = fields[field];
         }
@@ -29,23 +22,6 @@ router.post("/save", (req, client) => {
         modelsMap[model].save();
 
     }
-
-    //for(let mode)
-
-
-    // Replacing placeholder:  controllerName
-    
-    //const Model = require("../../models/business/#controllerName");
-    //const content = (req.body instanceof Object) ? req.body : JSON.parse(req.body);
-    //const fields = Object.keys(content);
-
-    //for(let field of fields){
-    //    Model[field] = content[field];
-    //}
-
-    //Model.save();
-    //client.setHeader('Access-Control-Allow-Origin', '*');
-    //client.send({msg: "Processo executado"});
 
 });
 

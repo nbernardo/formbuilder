@@ -5,8 +5,8 @@ function postJSONRequest({ action, callback, content }) {
     const xhr = new XMLHttpRequest();
 
     xhr.open("POST", `${url}/#action`, true);
-    xhr.setRequestHeader("Content-type","application/json");
-    xhr.setRequestHeader("Access-Control-Allow-Origin","*");
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhr.send(JSON.stringify(content));
 
     xhr.onload = function () {
@@ -16,21 +16,44 @@ function postJSONRequest({ action, callback, content }) {
         }
 
     }
-    
+
 }
 
-function formSumit(){
+function formSumit() {
 
     let content = {};
     const fields = document.getElementsByClassName("databaseField");
-    for(let idx in fields) 
-        if (fields[idx].nodeName)
-            if (fields[idx].name != "" && (fields[idx].nodeName.toLowerCase() == "input" || fields[idx].nodeName.toLowerCase() == "select"))
-                content[fields[idx].name] = fields[idx].value;
 
-    console.log(`Data to send:`);
-    console.log(content);
+    for (let idx in fields) {
 
-    postJSONRequest({action: "save", callback: (res) => console.log(res), content });
+        if (fields[idx].nodeName) {
+
+            if (!fields[idx].classList.contains("notDataFieldConsider") && (fields[idx].nodeName.toLowerCase() == "input" || fields[idx].nodeName.toLowerCase() == "select")) {
+
+                let curModel = fields[idx].dataset.model;
+                let fieldName = fields[idx].name;
+                let fieldValue = fields[idx].value;
+
+                if (!content[curModel]) //Check if the Model Object isn't instantiated 
+                    content[curModel] = {}
+
+
+                if (fields[idx].name == "") {
+                    fieldValue = fields[idx].value;
+                    fieldName = fields[++idx].name;
+                }
+
+
+                if (!content[curModel][fieldName]) {
+                    content[curModel][fieldName] = fieldValue;
+
+                }
+
+            }
+        }
+
+    }
+
+    postJSONRequest({ action: "save", callback: (res) => console.log(res), content });
 
 }
