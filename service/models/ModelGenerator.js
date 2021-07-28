@@ -27,10 +27,13 @@ module.exports = class ModelGenerator {
         }
 
         const saveString = this.generateSaveString();
-        modelContent += `\n\n\tsave(){\n\t\tPostgresInstance.runQuery(\`${saveString}\`);\n\t}`;
+        modelContent += `\n\n\tsave(){\n\t\treturn PostgresInstance.runQuery(\`${saveString}\`);\n\t}`;
 
         const findString = this.generateFindString();
-        modelContent += `\n\n\tfind(){\n\t\tPostgresInstance.runQuery(\`${findString}\`);\n\t}`;
+        modelContent += `\n\n\tfind(){\n\t\treturn PostgresInstance.runQuery(\`${findString}\`);\n\t}`;
+
+        const findLast = this.generateFindLastInsert();
+        modelContent += `\n\n\tfindLast(){\n\t\treturn PostgresInstance.runQuery(\`${findLast}\`);\n\t}`;
 
         modelContent += `\n\n} \n\nmodule.exports = new ${this.modelName}();`;
         this.modelContent = modelContent;
@@ -63,6 +66,7 @@ module.exports = class ModelGenerator {
     createTable(dbInstance){
 
         let queryString = `CREATE TABLE ${this.modelName || this.tableName}(\n`;
+        queryString += `id SERIAL PRIMARY KEY,`;
         const fields = this.fields;
 
         for(let idx in fields){
@@ -100,11 +104,12 @@ module.exports = class ModelGenerator {
 
     generateSaveString(){
 
-        let queryString = `INSERT INTO ${this.modelName || this.tableName} (fields) VALUES (`;
+        let queryString = `\nINSERT INTO ${this.modelName || this.tableName} (fields) VALUES (`;
         const fields = this.fields;
 
         queryString += this.getModelFields().value();
         queryString = queryString.replace("(fields)",`(${this.getModelFields().name()})`);
+        queryString += `\n;SELECT id FROM ${this.modelName || this.tableName} ORDER BY id DESC LIMIT 1;`
 
         return queryString;
 
@@ -114,6 +119,13 @@ module.exports = class ModelGenerator {
     generateFindString(){
 
         let queryString = `SELECT ${this.getModelFields().name()} FROM ${this.modelName || this.tableName}`;
+        return queryString;
+
+    }
+
+    generateFindLastInsert(){
+
+        let queryString = `SELECT id FROM ${this.modelName || this.tableName}`;
         return queryString;
 
     }
