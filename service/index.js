@@ -94,15 +94,6 @@ app.post("/newForm", (req, client) => {
     formContent.entityName = formName;
     const objectName = formContent.entityName || `NewObject_${(new Date).getTime()}`;
 
-    /*
-    const modelGenerator = new ModelGenerator(objectName);
-    modelGenerator.fields = databaseFields;
-    modelGenerator
-        .newModel()
-        .createOnFs(fs)
-        .createTable(PostgresInstance);
-    */
-
     const controllerGenerator = new ControllerGenerator(objectName);
     controllerGenerator.modelList = modelList;
     controllerGenerator
@@ -144,3 +135,6 @@ app.get("/form-list", (req, client) => {
 
 const CadastroDeCarroController = require("./controllers/business/CadastroDeCarro");
 app.use("/cadastrodecarro",CadastroDeCarroController);
+
+const LevantamentoAgrigulaController = require("./controllers/business/LevantamentoAgrigula");
+app.use("/levantamentoagrigula",LevantamentoAgrigulaController);

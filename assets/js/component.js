@@ -75,23 +75,46 @@ class Component {
 
         lable.onkeyup = function(event){
 
-            let comboBox = ctx.getElementsByTagName("select");
-            if(comboBox.length > 0 && !comboBox[0].classList.contains("notConsiderDataField")){
-                comboBox[0].name = extractProperIdValue(event.target.innerHTML);
-                comboBox[0].classList.add("databaseField");
+            let optionsCtx;
+            let optionInputs;
+            let comboBox = [];
+            //console.log(`Digitando o valor`);
+            //console.log(event.target.parentNode.id);
+
+            if(event.target.parentNode.id.toLowerCase().indexOf("optiongroupcontainer") >= 0){
+                
+                optionsCtx = event.target.parentNode;
+                optionInputs = optionsCtx.getElementsByTagName("input");
+
+                for(let idx = 0; idx < optionInputs.length; idx++){
+                    optionInputs[idx].name = extractProperIdValue(event.target.innerHTML);
+                }
+
+                console.log(`Um grupo de opcoes ${optionInputs.length}`);
                 return;
+            }
+
+            if(optionsCtx){
+
+                comboBox = optionsCtx.getElementsByTagName("select");
+                if(comboBox.length > 0 && !comboBox[0].classList.contains("notDataFieldConsider")){
+                    comboBox[0].name = extractProperIdValue(event.target.innerHTML);
+                    comboBox[0].classList.add("databaseField");
+                    return;
+                }
+                
             }
 
             //ctx.getElementsByTagName("input")[0].value = extractProperIdValue(event.target.innerHTML);
             const inputFields = ctx.getElementsByTagName("input");
             const totalFields = inputFields.length;
 
-            if(totalFields == 1 && !comboBox[0].classList.contains("notConsiderDataField")){
+            if(totalFields == 1){
                 ctx.getElementsByTagName("input")[0].name = extractProperIdValue(event.target.innerHTML);
                 ctx.getElementsByTagName("input")[0].classList.add("databaseField");
             }
 
-            if(totalFields > 1 && !comboBox[0].classList.contains("notConsiderDataField")){
+            if(totalFields > 1){
                 for(let x = 0; x < totalFields; x++){
                     ctx.getElementsByTagName("input")[x].name = extractProperIdValue(event.target.innerHTML);
                     ctx.getElementsByTagName("input")[x].classList.add("databaseField");
@@ -147,12 +170,21 @@ class Component {
         label.classList.add("optionLabel");
         label.innerHTML = values[value];
 
+        label.onkeyup = function(event){
+
+            const curLabel = event.target;
+            const taiedInput = curLabel.nextSibling;
+
+            taiedInput.value = curLabel.innerHTML;
+
+        }
+
         let optionGroup = this.newComponent("span");
         optionGroup.className = "left5px";
         optionGroup.appendChild(label);
         optionGroup.appendChild(component);
 
-        optionsContainer.className = "displayRow optionGroupContainer";
+        optionsContainer.className = "displayRow optionGroupContainer optionGroup";
         optionsContainer.appendChild(optionGroup);
 
         return optionsContainer;
@@ -257,6 +289,15 @@ class Component {
         label.contentEditable = true;
         label.classList.add("optionLabel");
         label.innerHTML = values[value];
+
+        label.onkeyup = function(event){
+
+            const curLabel = event.target;
+            const taiedInput = curLabel.nextSibling;
+
+            taiedInput.value = curLabel.innerHTML;
+
+        }
 
         let optionGroup = this.newComponent("span");
         optionGroup.className = "left5px";
