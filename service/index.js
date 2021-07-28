@@ -61,6 +61,7 @@ const generateModels = function (databaseFields) {
 
     const modelsAndFields = parseFieldAndModels(databaseFields);
     const models = Object.keys(modelsAndFields);
+    const foreignModel = models[0].charAt(0).toLowerCase()+""+models[0].substr(1);
 
     for (modelName of models) {
 
@@ -131,10 +132,3 @@ app.get("/form-list", (req, client) => {
     })
 
 })
-
-
-const CadastroDeCarroController = require("./controllers/business/CadastroDeCarro");
-app.use("/cadastrodecarro",CadastroDeCarroController);
-
-const LevantamentoAgrigulaController = require("./controllers/business/LevantamentoAgrigula");
-app.use("/levantamentoagrigula",LevantamentoAgrigulaController);
