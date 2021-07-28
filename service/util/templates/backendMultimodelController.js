@@ -11,22 +11,25 @@ router.post("/save", async (req, client) => {
     let processedModel = 0;
     let primaryModelId = null;
     let insertedValue = null;
+    let primaryModel = listOfModels[0];
 
-    for(let model of listOfModels){
-        
+    for (let model of listOfModels) {
+
         modelsMap[model] = require(`../../models/business/${model}`);
 
         let fields = content[model];
-        for(let field in fields){
+        for (let field in fields) {
             modelsMap[model][field] = fields[field];
         }
 
-        insertedValue = await modelsMap[model].save();
-        if(processedModel == 0){
-            primaryModelId = insertedValue[1].rows[0].id;
-        }
-        processedModel++;
+        if (processedModel > 0)
+            modelsMap[model][`id${primaryModel}`] = primaryModelId;
 
+        insertedValue = await modelsMap[model].save();
+        if (processedModel == 0) {
+            primaryModelId = insertedValue[1].rows[0].id;
+            processedModel++;
+        }
     }
 
 });

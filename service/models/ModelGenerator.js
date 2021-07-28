@@ -7,6 +7,7 @@ module.exports = class ModelGenerator {
     modelContent = null;
     tableName;
     modelName = null;
+    foreignModel = null;
 
     constructor(name){
         this.modelName = name;
@@ -16,6 +17,9 @@ module.exports = class ModelGenerator {
 
         const number = (new Date()).getTime();
         this.tableName = `newTable_${number}`;
+
+        if(this.modelName != this.foreignModel)
+            this.fields.push(`id${this.foreignModel}`);
 
         let fields = this.fields;
         
@@ -66,7 +70,7 @@ module.exports = class ModelGenerator {
     createTable(dbInstance){
 
         let queryString = `CREATE TABLE ${this.modelName || this.tableName}(\n`;
-        queryString += `id SERIAL PRIMARY KEY,`;
+        queryString += `id SERIAL PRIMARY KEY, `;
         const fields = this.fields;
 
         for(let idx in fields){

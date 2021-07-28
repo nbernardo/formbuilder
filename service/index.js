@@ -61,12 +61,13 @@ const generateModels = function (databaseFields) {
 
     const modelsAndFields = parseFieldAndModels(databaseFields);
     const models = Object.keys(modelsAndFields);
-    const foreignModel = models[0].charAt(0).toLowerCase()+""+models[0].substr(1);
+    const foreignModel = models[0];
 
     for (modelName of models) {
 
         const modelGenerator = new ModelGenerator(modelName);
         modelGenerator.fields = modelsAndFields[modelName];
+        modelGenerator.foreignModel = foreignModel;
         modelGenerator
             .newModel()
             .createOnFs(fs)
