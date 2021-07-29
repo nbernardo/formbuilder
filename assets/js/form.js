@@ -1,5 +1,43 @@
 const CLOSEBTN = `<br><span class="closePreview btnAbb" onclick="closePreview()">X</span><br><br>`;
 const SAVEBTN = `<input id="statedFormName" size="50"><button onclick="saveForm()" id="formSaveButton" type="button">Salvar Formulário</button><br>`;
+const FormBucket = [];
+
+
+const createLinkedForm = function(){
+
+    if(isFormAreaEmpty()){
+        alert("N\ao existe um form anterior para linkar com o novo");
+        return;
+    }
+
+    const curForm = document.getElementById("formArea").innerHTML;
+    document.getElementById("formArea").innerHTML = "";
+    addNewForm(curForm);
+
+
+}
+
+
+const addNewForm = function(content){
+
+    const formId = (FormBucket.length+1);
+    let newFormContent = {id: formId, content};
+    FormBucket.push(newFormContent);
+
+    const newFormLineItem = document.createElement("li");
+    newFormLineItem.style.cursor = "pointer";
+    newFormLineItem.innerHTML = `${formId}º Form`;
+
+    newFormLineItem.onclick = function(){
+
+        const curForm = FormBucket[formId-1];
+        document.getElementById("formArea").innerHTML = curForm.content;
+
+    }
+
+    document.getElementById("creatingForms").appendChild(newFormLineItem);
+
+}
 
 
 function closePreview() {
