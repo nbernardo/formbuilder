@@ -220,6 +220,13 @@ window.onclick = function (event) {
 /**
  * Form Buildef helpers
  */
+
+const updateActiveForm = function(){
+    if(FormVariables.activeForm){
+        FormBucket[FormVariables.activeForm] = document.getElementById("formArea").innerHTML;
+    }
+}
+
 const removeComponent = function(event){
 
     let container = event.target.parentNode;
@@ -230,11 +237,18 @@ const removeComponent = function(event){
         targetedLine.innerHTML = drag.LINEPLACEHOLDER;
         targetedLine.style.color = "lightgrey";
     }
-
-    if(FormVariables.activeForm){
-        FormBucket[FormVariables.activeForm] = document.getElementById("formArea").innerHTML;
-    }
-
+    updateActiveForm();
     console.log(`From removeComponent calling`);
+
+}
+
+
+const removeLine = function(newLineId, removeLineBtn){
+
+    let curLine = document.getElementById(newLineId);
+    document.getElementById("formArea").removeChild(curLine);
+    document.getElementById("formArea").removeChild(removeLineBtn);
+    updateActiveForm();
+    console.log(`Line removed from line remover`);
 
 }

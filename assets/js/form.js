@@ -23,13 +23,19 @@ const createLinkedForm = function(){
 
 const addNewForm = function(content){
 
+    if(FormVariables.activeForm){
+        FormBucket[FormVariables.activeForm] = content;
+        FormVariables.activeForm = null;
+        return;
+    }
+
     const formId = (Object.keys(FormBucket).length+1);
     FormBucket[formId] = content;
 
     const newFormLineItem = document.createElement("li");
     newFormLineItem.className = "addFormLine";
     newFormLineItem.style.cursor = "pointer";
-    newFormLineItem.style.paddingLeft = "15px";
+    newFormLineItem.style.marginLeft = "15px";
     newFormLineItem.style.textDecoration = "underline";
     newFormLineItem.innerHTML = `${formId}º Form`;
 
@@ -37,9 +43,12 @@ const addNewForm = function(content){
 
         removeBolfFromLineForm();
         document.getElementById("formArea").innerHTML = FormBucket[formId];
-        setTimeout(() => resetRemoveComponent(), 1000);
+        setTimeout(() => resetBuilderFeatures(), 1000);
         FormVariables.activeForm = formId;
         event.target.style.fontWeight = "bold";
+        event.target.style.background = "#cdec9e";
+        event.target.style.borderRadius = "3px";
+        event.target.style.width = "60px";
 
     }
 
@@ -49,8 +58,15 @@ const addNewForm = function(content){
 
 const removeBolfFromLineForm = function(){
     const compoenents = document.getElementsByClassName("addFormLine");
-    for(let x = 0; x < compoenents.length; x++)
-        compoenents[x].style.fontWeight = "none";
+    for(let x = 0; x < compoenents.length; x++){
+        compoenents[x].style.fontWeight = "normal";
+        compoenents[x].style.background = "none";
+    }
+}
+
+const resetBuilderFeatures = function(){
+    resetRemoveComponent();
+    resetRemoveLine();
 }
 
 const resetRemoveComponent = function(){
@@ -58,6 +74,14 @@ const resetRemoveComponent = function(){
     const components = document.getElementsByClassName("componentRemover");
     for(let x = 0; x < components.length; x++)
         components[x].addEventListener('click', event => removeComponent(event) );
+
+}
+
+const resetRemoveLine = function(){
+
+    const components = document.getElementsByClassName("lineRemover");
+    for(let x = 0; x < components.length; x++)
+        components[x].addEventListener('click', event => removeLine(event.target.dataset.lineId, event.target) );
 
 }
 

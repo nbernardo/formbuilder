@@ -137,16 +137,19 @@ function newComponentLine(e) {
             </select>
         </span>
     `;
+
+    removeLineBtn.dataset.lineId = newLine.id;
+
     removeLineBtn.className = `top10px removeComponent lineRemover`;
 
     removeLineBtn.onclick = function(event){
         
         if(event.target.className == "editing_tabel")
             return;
-
-        let curLine = document.getElementById(newLine.id);
-        document.getElementById("formArea").removeChild(curLine);
-        document.getElementById("formArea").removeChild(removeLineBtn);
+        removeLine(event.target.dataset.lineId, event.target);
+        //let curLine = document.getElementById(newLine.id);
+        //document.getElementById("formArea").removeChild(curLine);
+        //document.getElementById("formArea").removeChild(removeLineBtn);
         disableOrAnableNewFormButton();
     }
 
