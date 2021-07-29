@@ -215,3 +215,26 @@ window.onclick = function (event) {
     })
 
 }
+
+
+/**
+ * Form Buildef helpers
+ */
+const removeComponent = function(event){
+
+    let container = event.target.parentNode;
+    let targetedLine = container.parentNode;
+    targetedLine.removeChild(container);
+
+    if (targetedLine.innerHTML == "") {
+        targetedLine.innerHTML = drag.LINEPLACEHOLDER;
+        targetedLine.style.color = "lightgrey";
+    }
+
+    if(FormVariables.activeForm){
+        FormBucket[FormVariables.activeForm] = document.getElementById("formArea").innerHTML;
+    }
+
+    console.log(`From removeComponent calling`);
+
+}

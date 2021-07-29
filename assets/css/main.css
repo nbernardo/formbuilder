@@ -16,13 +16,13 @@
 }
 
 .component-container{
-    flex: 1.5;
+    flex: 1.8;
 }
 
 
 .form-space{
     padding: 10px;
-    flex: 2.5;
+    flex: 2.2;
 }
 
 
@@ -180,9 +180,11 @@ span .lineRemover:hover{
 }
 
 .component-container  ul  li{
-    font: 14px tahoma;
+
+    font: 13px tahoma;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     list-style: none;
+    letter-spacing: 0;
 }
 
 ul.componentList > li{
@@ -248,4 +250,8 @@ ul.modelPannel li:first-child{
 
 .inputConfigPanel ul li label{
     display: block;
+}
+
+.newModel{
+
 }

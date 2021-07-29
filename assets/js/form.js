@@ -1,7 +1,10 @@
 const CLOSEBTN = `<br><span class="closePreview btnAbb" onclick="closePreview()">X</span><br><br>`;
 const SAVEBTN = `<input id="statedFormName" size="50"><button onclick="saveForm()" id="formSaveButton" type="button">Salvar Formulário</button><br>`;
-const FormBucket = [];
-
+const FormBucket = {};
+const FormVariables = {
+    counter: 0,
+    activeForm: null
+}
 
 const createLinkedForm = function(){
 
@@ -20,22 +23,41 @@ const createLinkedForm = function(){
 
 const addNewForm = function(content){
 
-    const formId = (FormBucket.length+1);
-    let newFormContent = {id: formId, content};
-    FormBucket.push(newFormContent);
+    const formId = (Object.keys(FormBucket).length+1);
+    FormBucket[formId] = content;
 
     const newFormLineItem = document.createElement("li");
+    newFormLineItem.className = "addFormLine";
     newFormLineItem.style.cursor = "pointer";
+    newFormLineItem.style.paddingLeft = "15px";
+    newFormLineItem.style.textDecoration = "underline";
     newFormLineItem.innerHTML = `${formId}º Form`;
 
-    newFormLineItem.onclick = function(){
+    newFormLineItem.onclick = function(event){
 
-        const curForm = FormBucket[formId-1];
-        document.getElementById("formArea").innerHTML = curForm.content;
+        removeBolfFromLineForm();
+        document.getElementById("formArea").innerHTML = FormBucket[formId];
+        setTimeout(() => resetRemoveComponent(), 1000);
+        FormVariables.activeForm = formId;
+        event.target.style.fontWeight = "bold";
 
     }
 
     document.getElementById("creatingForms").appendChild(newFormLineItem);
+
+}
+
+const removeBolfFromLineForm = function(){
+    const compoenents = document.getElementsByClassName("addFormLine");
+    for(let x = 0; x < compoenents.length; x++)
+        compoenents[x].style.fontWeight = "none";
+}
+
+const resetRemoveComponent = function(){
+
+    const components = document.getElementsByClassName("componentRemover");
+    for(let x = 0; x < components.length; x++)
+        components[x].addEventListener('click', event => removeComponent(event) );
 
 }
 
@@ -47,6 +69,59 @@ function closePreview() {
 
 }
 
+const nextForm = function(){
+    previewLinkedForms();
+}
+
+
+const previewLinkedForms = function () {
+
+    let submitBtns = {
+        "lastForm": `<button onclick='formSumit()'>Guardar</button>`,
+        "hasNext": `<button onclick='nextForm()'>Proximo</button>`
+    }
+    
+    let onCreationForm = '';
+    let sumbitButn;
+
+    let previewContainer = document.createElement("div");
+    previewContainer.id = "previewFormContainer";
+    previewContainer.style.display = "none";
+
+    let formBucketContent = Object.keys(FormBucket);
+
+    if(formBucketContent.length == 1 || formBucketContent.length == (FormVariables.counter+1)){
+        onCreationForm = FormBucket[formBucketContent.length].content || '';
+        sumbitButn = submitBtns['lastForm'];
+    }
+
+    if(formBucketContent.length > 1){
+        onCreationForm = FormBucket[FormVariables.counter].content  || '';
+        sumbitButn = submitBtns['hasNext'];
+        FormVariables.counter++;
+    }
+    
+    const actions = `${CLOSEBTN}${SAVEBTN}`;
+
+    document.body.appendChild(previewContainer);
+    document.getElementById("previewFormContainer").innerHTML = `${actions}${onCreationForm}${sumbitButn}`;
+
+    setTimeout(() => {
+
+        const context = document.getElementById("previewFormContainer");
+        removeNewOptionContainer(context);
+        removeRemoveComponent(context);
+        resetLabelPos(context);
+        resetFormLines(context);
+        resetSelectPos(context);
+        removeConfigButtons(context);
+        resetOptionGroupContainer(context);
+        removeConfigContnent(context);
+        document.getElementById("previewFormContainer").style.display = "";
+
+    }, 500);
+
+}
 
 const previewForm = function () {
 
@@ -55,8 +130,10 @@ const previewForm = function () {
     previewContainer.id = "previewFormContainer";
     previewContainer.style.display = "none";
 
-    const actions = `${CLOSEBTN}${SAVEBTN}`;
 
+    const actions = `${CLOSEBTN}${SAVEBTN}`;
+    
+    
     document.body.appendChild(previewContainer);
     document.getElementById("previewFormContainer").innerHTML = `${actions}${onCreationForm}`;
 

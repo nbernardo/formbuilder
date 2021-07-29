@@ -24,11 +24,12 @@
         <div class="component-container">
 
             <button onclick="previewForm()" id="formPreviewButton">Previsualizar o form</button>
+            <button onclick="previewLinkedForms()" id="formPreviewButton">Previsualizar forms ligados</button>
 
             <div id="formConfigurationPanel">
 
                 <ul class="modelPannel">
-                    <li onclick="newModel()" style="cursor: pointer;">
+                    <li onclick="newModel()" class="newModel" style="cursor: pointer;">
                         + Adicionar Modelo
                     </li>
                 </ul>
@@ -85,7 +86,8 @@
 
         <div class="form-space">
 
-            <button type="button" id="newFormAddBtn" disabled onclick="createLinkedForm()">Adicionar Form</button>
+            <button type="button" id="newFormAddBtn" disabled  onclick="createLinkedForm()">Adicionar Form</button>
+            <button type="button" id="formUpdateBtn" style="display: none;"  onclick="createLinkedForm()">Adicionar Form</button>
             <div id="formArea"></div>
 
         </div>

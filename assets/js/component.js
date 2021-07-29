@@ -31,18 +31,11 @@ class Component {
         container.classList.add("displayCol");
 
         removeBtn.innerHTML = "x";
-        removeBtn.className = "posAbsolute removeComponent";
+        removeBtn.className = "posAbsolute removeComponent componentRemover";
 
         removeBtn.addEventListener('click', (event) => {
 
-            let container = event.target.parentNode;
-            let targetedLine = container.parentNode;
-            targetedLine.removeChild(container);
-
-            if (targetedLine.innerHTML == "") {
-                targetedLine.innerHTML = drag.LINEPLACEHOLDER;
-                targetedLine.style.color = "lightgrey";
-            }
+            removeComponent(event);
             disableOrAnableNewFormButton();
 
         });
