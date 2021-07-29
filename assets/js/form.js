@@ -6,9 +6,9 @@ const FormVariables = {
     activeForm: null
 }
 
-const createLinkedForm = function(){
+const createLinkedForm = function () {
 
-    if(isFormAreaEmpty()){
+    if (isFormAreaEmpty()) {
         alert("N\ao existe um form anterior para linkar com o novo");
         return;
     }
@@ -21,15 +21,15 @@ const createLinkedForm = function(){
 }
 
 
-const addNewForm = function(content){
+const addNewForm = function (content) {
 
-    if(FormVariables.activeForm){
+    if (FormVariables.activeForm) {
         FormBucket[FormVariables.activeForm] = content;
         FormVariables.activeForm = null;
         return;
     }
 
-    const formId = (Object.keys(FormBucket).length+1);
+    const formId = (Object.keys(FormBucket).length + 1);
     FormBucket[formId] = content;
 
     const newFormLineItem = document.createElement("li");
@@ -39,10 +39,13 @@ const addNewForm = function(content){
     newFormLineItem.style.textDecoration = "underline";
     newFormLineItem.innerHTML = `${formId}º Form`;
 
-    newFormLineItem.onclick = function(event){
+    newFormLineItem.onclick = function (event) {
 
         removeBolfFromLineForm();
+        document.getElementById("formArea").style.display = "none";
+        document.getElementById("spinningContent").style.display = "flex";
         document.getElementById("formArea").innerHTML = FormBucket[formId];
+
         setTimeout(() => resetBuilderFeatures(), 1000);
         FormVariables.activeForm = formId;
         event.target.style.fontWeight = "bold";
@@ -56,32 +59,70 @@ const addNewForm = function(content){
 
 }
 
-const removeBolfFromLineForm = function(){
+const removeBolfFromLineForm = function () {
     const compoenents = document.getElementsByClassName("addFormLine");
-    for(let x = 0; x < compoenents.length; x++){
+    for (let x = 0; x < compoenents.length; x++) {
         compoenents[x].style.fontWeight = "normal";
         compoenents[x].style.background = "none";
     }
 }
 
-const resetBuilderFeatures = function(){
+const resetBuilderFeatures = function () {
     resetRemoveComponent();
     resetRemoveLine();
+    resetComboBoxAddItem();
+    resetAllModelNameInputs(restateAllModels);
 }
 
-const resetRemoveComponent = function(){
+const resetRemoveComponent = function () {
 
     const components = document.getElementsByClassName("componentRemover");
-    for(let x = 0; x < components.length; x++)
-        components[x].addEventListener('click', event => removeComponent(event) );
+    for (let x = 0; x < components.length; x++)
+        components[x].addEventListener('click', event => removeComponent(event));
 
 }
 
-const resetRemoveLine = function(){
+const resetRemoveLine = function () {
 
     const components = document.getElementsByClassName("lineRemover");
-    for(let x = 0; x < components.length; x++)
-        components[x].addEventListener('click', event => removeLine(event.target.dataset.lineId, event.target) );
+    for (let x = 0; x < components.length; x++)
+        components[x].addEventListener('click', event => removeLine(event.target.dataset.lineId, event.target));
+
+}
+
+const resetComboBoxAddItem = function(){
+
+    const components = document.getElementsByClassName("addComboOption");
+    for (let x = 0; x < components.length; x++)
+        components[x].addEventListener('click', event => addOptionOnSelect(event.target.dataset.idNum, event.target.dataset.selectId));
+
+
+}
+
+
+const restateAllModels = function () {
+
+    const allModelsInput = document.getElementsByClassName("fieldGroupModelName");
+    const modelsInput = Object.keys(allModelsInput);
+    let curField;
+    let comboBox;
+
+    for (let idx of modelsInput) {
+
+        let curElm = allModelsInput[idx].parentNode.parentNode.nextElementSibling;
+        curField = curElm.getElementsByClassName("databaseField");
+
+        if (curField.length > 0) {
+
+            let curInput = curField[0].dataset.model;
+            allModelsInput[idx].value = curInput;
+            
+        }
+
+    }
+
+    document.getElementById("spinningContent").style.display = "none";
+    document.getElementById("formArea").style.display = "";
 
 }
 
@@ -93,7 +134,7 @@ function closePreview() {
 
 }
 
-const nextForm = function(){
+const nextForm = function () {
     previewLinkedForms();
 }
 
@@ -104,7 +145,7 @@ const previewLinkedForms = function () {
         "lastForm": `<button onclick='formSumit()'>Guardar</button>`,
         "hasNext": `<button onclick='nextForm()'>Proximo</button>`
     }
-    
+
     let onCreationForm = '';
     let sumbitButn;
 
@@ -114,17 +155,17 @@ const previewLinkedForms = function () {
 
     let formBucketContent = Object.keys(FormBucket);
 
-    if(formBucketContent.length == 1 || formBucketContent.length == (FormVariables.counter+1)){
+    if (formBucketContent.length == 1 || formBucketContent.length == (FormVariables.counter + 1)) {
         onCreationForm = FormBucket[formBucketContent.length].content || '';
         sumbitButn = submitBtns['lastForm'];
     }
 
-    if(formBucketContent.length > 1){
-        onCreationForm = FormBucket[FormVariables.counter].content  || '';
+    if (formBucketContent.length > 1) {
+        onCreationForm = FormBucket[FormVariables.counter].content || '';
         sumbitButn = submitBtns['hasNext'];
         FormVariables.counter++;
     }
-    
+
     const actions = `${CLOSEBTN}${SAVEBTN}`;
 
     document.body.appendChild(previewContainer);
@@ -156,8 +197,8 @@ const previewForm = function () {
 
 
     const actions = `${CLOSEBTN}${SAVEBTN}`;
-    
-    
+
+
     document.body.appendChild(previewContainer);
     document.getElementById("previewFormContainer").innerHTML = `${actions}${onCreationForm}`;
 
@@ -276,7 +317,7 @@ function resetLabelPos(ctx) {
 
 }
 
-function removeConfigContnent(ctx){
+function removeConfigContnent(ctx) {
 
     /*
     let allConfigs = ctx.getElementsByClassName("inputConfigPanel");
@@ -374,7 +415,7 @@ function addNewModel({ val, id }) {
     modelsNameLista[id] = val;
 
     let component = `
-        <select class="editing_tabel" onchange="setFieldsModelName(event)" id="entityName${id}">
+        <select class="editing_tabel fieldGroupModelName" onchange="setFieldsModelName(event)" id="entityName${id}">
             <option class="editing_tabel" value="">Selecione a entidade</option>
     `;
 
@@ -393,4 +434,36 @@ function addNewModel({ val, id }) {
     }
 
 
+}
+
+const resetAllModelNameInputs = function (callback) {
+
+    const modelLists = document.getElementsByClassName("fieldGroupModel");
+
+    let component = `
+        <select class="editing_tabel fieldGroupModelName" onchange="setFieldsModelName(event)">
+            <option class="editing_tabel" value="">Selecione a entidade</option>
+    `;
+
+    const options = Object.keys(modelsNameLista);
+    for (let x = 0; x < options.length; x++) {
+        let value = modelsNameLista[options[x]];
+        component += `<option class="editing_tabel" value="${value}">${value}</option>`;
+    }
+
+    component += `</select>`;
+
+    for (let x = 0; x < modelLists.length; x++) {
+        modelLists[x].innerHTML = component;
+    }
+
+    if (callback)
+        callback();
+
+}
+
+const updateActiveForm = function () {
+    if (FormVariables.activeForm) {
+        FormBucket[FormVariables.activeForm] = document.getElementById("formArea").innerHTML;
+    }
 }

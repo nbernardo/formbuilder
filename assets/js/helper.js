@@ -220,13 +220,6 @@ window.onclick = function (event) {
 /**
  * Form Buildef helpers
  */
-
-const updateActiveForm = function(){
-    if(FormVariables.activeForm){
-        FormBucket[FormVariables.activeForm] = document.getElementById("formArea").innerHTML;
-    }
-}
-
 const removeComponent = function(event){
 
     let container = event.target.parentNode;
@@ -246,9 +239,32 @@ const removeComponent = function(event){
 const removeLine = function(newLineId, removeLineBtn){
 
     let curLine = document.getElementById(newLineId);
-    document.getElementById("formArea").removeChild(curLine);
-    document.getElementById("formArea").removeChild(removeLineBtn);
+
+    try {
+        document.getElementById("formArea").removeChild(curLine);
+    } catch (error) {}
+    
+    try {
+        document.getElementById("formArea").removeChild(removeLineBtn);
+    } catch (error) {}
+
     updateActiveForm();
     console.log(`Line removed from line remover`);
+
+}
+
+
+const addOptionOnSelect = function (id, componentId) {
+
+    let inputValue = document.getElementById(`newText_${id}`);
+    if (inputValue.value == "") return false;
+
+    let totalOptions = document.getElementById(componentId).getElementsByTagName("option").length;
+    let newOption = document.createElement("option");
+    newOption.innerHTML = inputValue.value;
+    newOption.value = parseInt(totalOptions) + 1;
+    document.getElementById(`select_${id}`).appendChild(newOption);
+    document.getElementById(`select_${id}`).click();
+    inputValue.value = "";
 
 }

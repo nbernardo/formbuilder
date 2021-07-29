@@ -14,6 +14,7 @@
     <script defer src="assets/js/form.js"></script>
     <script defer src="assets/js/helper.js"></script>
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/spinner.css">
 
 </head>
 
@@ -86,8 +87,25 @@
 
         <div class="form-space">
 
-            <button type="button" id="newFormAddBtn" disabled  onclick="createLinkedForm()">Adicionar Form</button>
-            <button type="button" id="formUpdateBtn" style="display: none;"  onclick="createLinkedForm()">Adicionar Form</button>
+            <button type="button" id="newFormAddBtn" disabled onclick="createLinkedForm()">Adicionar Form</button>
+            
+            <div 
+                 id="spinningContent"
+                 style="display: none;
+                        text-align: center;
+                        align-content: center;
+                        flex-direction: column;
+                        align-items: center;">
+
+                <div>Carregando os models</div>
+                <div class="lds-ellipsis">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            
             <div id="formArea"></div>
 
         </div>

@@ -65,7 +65,11 @@ class Component {
         const lable = document.createElement("label");
         lable.contentEditable = true;
         lable.className = "formInputLabel paddingRight10px paddingLeft10px textBold";
-        lable.innerHTML = "Nome do campo";
+        lable.innerHTML = "Rótulo do campo";
+
+        lable.onblur = function(){
+            updateActiveForm();
+        }
 
         lable.onkeyup = function(event){
 
@@ -164,6 +168,11 @@ class Component {
         label.classList.add("optionLabel");
         label.innerHTML = values[value];
 
+        label.onblur = function(){
+            updateActiveForm();
+        }
+
+
         label.onkeyup = function(event){
 
             const curLabel = event.target;
@@ -216,21 +225,6 @@ class Component {
         let idSelect = `select_${idNum}`;
         const newComponent = this.newComponent;
 
-        const addButton = function (id) {
-
-            let inputValue = document.getElementById(`newText_${id}`);
-            if (inputValue.value == "") return false;
-
-            let totalOptions = document.getElementById(idSelect).getElementsByTagName("option").length;
-            let newOption = newComponent("option");
-            newOption.innerHTML = inputValue.value;
-            newOption.value = parseInt(totalOptions) + 1;
-            document.getElementById(`select_${id}`).appendChild(newOption);
-            document.getElementById(`select_${id}`).click();
-            inputValue.value = "";
-
-        }
-
         let container = this.newContainer("span");
         container.appendChild(this.newLabel(container));
 
@@ -238,8 +232,10 @@ class Component {
         addOptionBtn.classList = "displayRow newOptionContainer";
         let btn = newComponent("a");
         btn.innerHTML = "Adicionar";
-        btn.className = "addBtn";
-        btn.onclick = () => addButton(idNum);
+        btn.className = "addBtn addComboOption";
+        btn.dataset.selectId = idSelect;
+        btn.dataset.idNum = idNum;
+        btn.onclick = () => addOptionOnSelect(idNum, idSelect);
 
         let newOptionText = newComponent("input");
         newOptionText.id = `newText_${idNum}`;
@@ -283,6 +279,10 @@ class Component {
         label.contentEditable = true;
         label.classList.add("optionLabel");
         label.innerHTML = values[value];
+
+        label.onblur = function(){
+            updateActiveForm();
+        }
 
         label.onkeyup = function(event){
 

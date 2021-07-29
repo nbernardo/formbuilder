@@ -132,7 +132,7 @@ function newComponentLine(e) {
     removeLineBtn.innerHTML = `
         x Remover linha
         <span class="fieldGroupModel">
-            <select class="editing_tabel" onchange="setFieldsModelName(event)" id="entityName${newLine.id}">
+            <select class="editing_tabel fieldGroupModelName" onchange="setFieldsModelName(event)" id="entityName${newLine.id}">
                 <option value="" class="editing_tabel">Selecione a entidade</option>
             </select>
         </span>
@@ -179,7 +179,7 @@ function newComponentLine(e) {
 
 function setFieldsModelName(event){
 
-    alert(`CHanging`);
+    //alert(`CHanging`);
     const fieldsContainer = event.target.parentNode.parentNode.nextSibling;
     const allFields = fieldsContainer.getElementsByClassName("databaseField");
     
