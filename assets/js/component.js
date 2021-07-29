@@ -43,6 +43,7 @@ class Component {
                 targetedLine.innerHTML = drag.LINEPLACEHOLDER;
                 targetedLine.style.color = "lightgrey";
             }
+            disableOrAnableNewFormButton();
 
         });
 

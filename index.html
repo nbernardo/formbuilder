@@ -24,20 +24,20 @@
         <div class="component-container">
 
             <button onclick="previewForm()" id="formPreviewButton">Previsualizar o form</button>
-            
+
             <div id="formConfigurationPanel">
 
                 <ul class="modelPannel">
                     <li onclick="newModel()" style="cursor: pointer;">
-                        + Adicionar
+                        + Adicionar Modelo
                     </li>
                 </ul>
-                
+
                 <ul class="componentList">
                     <!--
                         <li draggable="true" ondrag="dragging(event)" data-type="Group">Fieldgroup</li>
                     -->
-                    
+
                     <li draggable="true" ondrag="dragging(event)" data-type="Input">
                         <img src="assets/icons/input.png" class="inputComponentIcon">
                         <span class="inputComponentText"> Caixa de Texto </span>
@@ -63,15 +63,25 @@
                         <img src="assets/icons/upload.png" class="inputComponentIcon">
                         <span class="inputComponentText"> Upload Ficheiro </span>
                     </li>
+
+                    <li draggable="true" ondrag="dragging(event)" data-type="Senha">
+                        <span class="inputComponentText"> Password field </span>
+                    </li>
+
                 </ul>
-                
+
             </div>
 
 
         </div>
 
-        <div class="form-space" id="formArea"></div>
-        
+        <div class="form-space">
+
+            <button type="button" id="newFormAddBtn" disabled>Adicionar Form</button>
+            <div id="formArea"></div>
+
+        </div>
+
     </div>
 
 </body>

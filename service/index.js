@@ -133,3 +133,9 @@ app.get("/form-list", (req, client) => {
     })
 
 })
+
+const AulasDeExplicacaoController = require("./controllers/business/AulasDeExplicacao");
+app.use("/aulasdeexplicacao",AulasDeExplicacaoController);
+
+const CarRegistrationController = require("./controllers/business/CarRegistration");
+app.use("/carregistration",CarRegistrationController);

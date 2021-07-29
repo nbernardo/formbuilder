@@ -1,5 +1,5 @@
 const CLOSEBTN = `<br><span class="closePreview btnAbb" onclick="closePreview()">X</span><br><br>`;
-const SAVEBTN = `<input id="statedFormName" size="100"><button onclick="saveForm()" id="formSaveButton" type="button">Salvar Formulário</button><br>`;
+const SAVEBTN = `<input id="statedFormName" size="50"><button onclick="saveForm()" id="formSaveButton" type="button">Salvar Formulário</button><br>`;
 
 
 function closePreview() {
@@ -38,6 +38,7 @@ const previewForm = function () {
     }, 500);
 
 }
+
 
 const sendForm = function (content, fields = "") {
 

@@ -117,7 +117,11 @@ function newComponentLine(e) {
         e.preventDefault();
         newComponen(e);
         console.log(`Lagrou o objecto na linha nova`);
+
+        disableOrAnableNewFormButton();
+        
     }
+
     newLine.className = "formNewLine";
     
     newLine.id = `formNewLine${(new Date).getTime()}`;
@@ -143,6 +147,7 @@ function newComponentLine(e) {
         let curLine = document.getElementById(newLine.id);
         document.getElementById("formArea").removeChild(curLine);
         document.getElementById("formArea").removeChild(removeLineBtn);
+        disableOrAnableNewFormButton();
     }
 
     document.getElementById("formArea").appendChild(removeLineBtn);

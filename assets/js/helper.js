@@ -26,6 +26,27 @@ String.prototype.removeSpaces = function () {
 }
 
 
+const isFormAreaEmpty = function(){
+
+    const formArea = document.getElementById("formArea").getElementsByTagName("input");
+    return formArea.length <= 0 ? true : false;
+
+}
+
+const disableOrAnableNewFormButton = function(){
+
+    const btn = document.getElementById("newFormAddBtn");
+
+    if(isFormAreaEmpty()){
+        btn.disabled = true;
+        return;
+    }
+
+    btn.disabled = false;
+
+}
+
+
 /** 
  @param {String} text
  @param {Array} values
