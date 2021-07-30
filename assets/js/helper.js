@@ -26,18 +26,18 @@ String.prototype.removeSpaces = function () {
 }
 
 
-const isFormAreaEmpty = function(){
+const isFormAreaEmpty = function () {
 
     const formArea = document.getElementById("formArea").getElementsByTagName("input");
     return formArea.length <= 0 ? true : false;
 
 }
 
-const disableOrAnableNewFormButton = function(){
+const disableOrAnableNewFormButton = function () {
 
     const btn = document.getElementById("newFormAddBtn");
 
-    if(isFormAreaEmpty()){
+    if (isFormAreaEmpty()) {
         btn.disabled = true;
         return;
     }
@@ -46,21 +46,31 @@ const disableOrAnableNewFormButton = function(){
 
 }
 
+const spinningContent = function () {
+    return `
+        <div>Carregando, aguarde</div>
+        <div class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    `;
+}
 
 /** 
  @param {String} text
  @param {Array} values
 */
 
+const charToReplace = [
+    { "a": "ã|â|á|à" },
+    { "e": "ẽ|ê|é|è" },
+    { "i": "ĩ|î|í|ì" },
+    { "o": "õ|ô|ó|ò" },
+    { "u": "ũ|û|ú|ù" },
+];
 const extractProperIdValue = function (text) {
-
-    let charToReplace = [
-        { "a": "ã|â|á|à" },
-        { "e": "ẽ|ê|é|è" },
-        { "i": "ĩ|î|í|ì" },
-        { "o": "õ|ô|ó|ò" },
-        { "u": "ũ|û|ú|ù" },
-    ];
 
     let finalString = `"${text.toCamelCase().removeSpaces()}"`;
 
@@ -75,9 +85,25 @@ const extractProperIdValue = function (text) {
         }
 
     }
-
     return eval(finalString.replace("&nbsp;", ""));
+}
 
+const extractProperEntityName = function (text) {
+
+    let finalString = `"${text.capitalize().removeSpaces()}"`;
+
+    for (let x = 0; x < charToReplace.length; x++) {
+
+        const curLetter = Object.keys(charToReplace[x]);
+        const toReplace = Object.values(charToReplace[x]);
+        let itemsToReplace = toReplace[0].split("|");
+
+        for (let x1 = 0; x1 < itemsToReplace.length; x1++) {
+            finalString += `.replace(/${itemsToReplace[x1]}/ig,"${curLetter}")`;
+        }
+
+    }
+    return eval(finalString.replace("&nbsp;", ""));
 }
 
 //TO Test
@@ -105,7 +131,7 @@ const showRequiredMessageInput = function (idComponente, status, idInput) {
 
 }
 
-const inputConfigMenuContent = ({componentId, inputId}) => (
+const inputConfigMenuContent = ({ componentId, inputId }) => (
 
     `                    
     <img
@@ -172,10 +198,10 @@ const inputConfigMenuContent = ({componentId, inputId}) => (
 )
 
 
-const defConfigProp = function(idInput, {data, prop, value}){
+const defConfigProp = function (idInput, { data, prop, value }) {
 
     const component = document.getElementById(idInput);
-    if(prop){
+    if (prop) {
         component[prop] = value;
         return;
     }
@@ -195,24 +221,30 @@ const GlobalFacade = {
 
 window.onclick = function (event) {
 
-    let activedConfigs = GlobalFacade.activeFieldConfig;
-    let clickedConfig = undefined;
+    try {
 
-    if (clickedConfig = event.target.dataset.panel) {
-        activedConfigs = activedConfigs.filter((v) => v != clickedConfig);
+        let activedConfigs = GlobalFacade.activeFieldConfig;
+        let clickedConfig = [];
+
+        if (clickedConfig = event.target.dataset.panel) {
+            activedConfigs = activedConfigs.filter((v) => v != clickedConfig);
+        }
+
+        if (clickedConfig = event.target.parentNode.parentNode.dataset.panel) {
+            activedConfigs = activedConfigs.filter((v) => v != clickedConfig);
+        }
+
+        if (clickedConfig = event.target.parentNode.parentNode.parentNode.dataset.panel) {
+            activedConfigs = activedConfigs.filter((v) => v != clickedConfig);
+        }
+
+        activedConfigs.forEach((v) => {
+            document.getElementById(v).style.display = "none";
+        })
+
+    } catch (error) {
+
     }
-
-    if (clickedConfig = event.target.parentNode.parentNode.dataset.panel) {
-        activedConfigs = activedConfigs.filter((v) => v != clickedConfig);
-    }
-
-    if (clickedConfig = event.target.parentNode.parentNode.parentNode.dataset.panel) {
-        activedConfigs = activedConfigs.filter((v) => v != clickedConfig);
-    }
-
-    activedConfigs.forEach((v) => {
-        document.getElementById(v).style.display = "none";
-    })
 
 }
 
@@ -220,7 +252,7 @@ window.onclick = function (event) {
 /**
  * Form Buildef helpers
  */
-const removeComponent = function(event){
+const removeComponent = function (event) {
 
     let container = event.target.parentNode;
     let targetedLine = container.parentNode;
@@ -236,17 +268,17 @@ const removeComponent = function(event){
 }
 
 
-const removeLine = function(newLineId, removeLineBtn){
+const removeLine = function (newLineId, removeLineBtn) {
 
     let curLine = document.getElementById(newLineId);
 
     try {
         document.getElementById("formArea").removeChild(curLine);
-    } catch (error) {}
-    
+    } catch (error) { }
+
     try {
         document.getElementById("formArea").removeChild(removeLineBtn);
-    } catch (error) {}
+    } catch (error) { }
 
     updateActiveForm();
     console.log(`Line removed from line remover`);

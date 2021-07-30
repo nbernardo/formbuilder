@@ -2,7 +2,7 @@ const CLOSEBTN = `<br><span class="closePreview btnAbb" onclick="closePreview()"
 const SAVEBTN = `<input id="statedFormName" size="50"><button onclick="saveForm()" id="formSaveButton" type="button">Salvar Formulário</button><br>`;
 const FormBucket = {};
 const FormVariables = {
-    counter: 0,
+    counter: 1,
     activeForm: null
 }
 
@@ -90,7 +90,7 @@ const resetRemoveLine = function () {
 
 }
 
-const resetComboBoxAddItem = function(){
+const resetComboBoxAddItem = function () {
 
     const components = document.getElementsByClassName("addComboOption");
     for (let x = 0; x < components.length; x++)
@@ -116,7 +116,7 @@ const restateAllModels = function () {
 
             let curInput = curField[0].dataset.model;
             allModelsInput[idx].value = curInput;
-            
+
         }
 
     }
@@ -131,58 +131,124 @@ function closePreview() {
 
     let previewContainer = document.getElementById("previewFormContainer");
     document.body.removeChild(previewContainer);
+    FormVariables.counter = 1;
 
 }
 
 const nextForm = function () {
-    previewLinkedForms();
+    //const actions = `${CLOSEBTN}${SAVEBTN}`
+    //document.getElementById("previewFormContainer").innerHTML = `${actions}${spinningContent()}`;;
+    FormVariables.counter++;
+    formNavigate();
+}
+
+const prevForm = function () {
+    //const actions = `${CLOSEBTN}${SAVEBTN}`
+    //document.getElementById("previewFormContainer").innerHTML = `${actions}${spinningContent()}`;;
+    FormVariables.counter--;
+    formNavigate();
 }
 
 
+const removeConfigOptionsOnPreview = function (onCreationForm) {
+
+    onCreationForm = onCreationForm
+        .replace(/class="top10px removeComponent lineRemover"/g, /style="display: none;"/)
+        .replace(/class="posAbsolute removeComponent componentRemover"/g, /style="display: none;"/)
+        .replace(/class="inputComponentIcon inputConfigIcon"/g, /style="display: none;"/)
+
+    return onCreationForm;
+
+
+}
+
+
+const submitBtns = {
+    "lastForm": `<button onclick='formSumit()' style="margin-top: 5px;">Guardar</button>`,
+    "hasNext": `<button onclick='nextForm()' style="margin-top: 5px;">Proximo</button>`,
+    "hasPrev": `<button onclick='prevForm()' style="margin-top: 5px;">Anterior</button>`
+}
 const previewLinkedForms = function () {
 
-    let submitBtns = {
-        "lastForm": `<button onclick='formSumit()'>Guardar</button>`,
-        "hasNext": `<button onclick='nextForm()'>Proximo</button>`
-    }
 
-    let onCreationForm = '';
-    let sumbitButn;
+    let navFormBtns = document.createElement("div");
+    navFormBtns.id = "formNavFormBtns";
+    navFormBtns.style.height = "25px";
+    //navFormBtns.style.border = "1px solid red";
+    
+    let headerContainer = document.createElement("div");
+    headerContainer.id = "formHeaderContainer";
+    headerContainer.innerHTML = `${CLOSEBTN}${SAVEBTN}`;
+
+    let navButtonsContainer = document.createElement("div");
+    headerContainer.id = "formNavButtonsContainer";
 
     let previewContainer = document.createElement("div");
     previewContainer.id = "previewFormContainer";
-    previewContainer.style.display = "none";
+
+    let spinningContainer = document.createElement("div");
+    spinningContainer.id = "spinningContainer";
+    spinningContainer.innerHTML = spinningContent();
+    spinningContainer.style.textAlign = "center";
+
+    let formContainer = document.createElement("div");
+    formContainer.id = "formContainerContainer";
+    formContainer.style.display = "none";
+    formContainer.style.marginTop = "10px";
+
+    previewContainer.appendChild(headerContainer);
+    previewContainer.appendChild(navFormBtns);
+    previewContainer.appendChild(navButtonsContainer);
+    previewContainer.appendChild(spinningContainer);
+    previewContainer.appendChild(formContainer);
+
+    document.body.appendChild(previewContainer);
+
+    formNavigate();
+
+}
+
+const formNavigate = function () {
+
+    let onCreationForm = '';
+    let nextFormBtn = ``;
+    let prevFormBtn = '';
+
+    document.getElementById("spinningContainer").style.display = "";
+    document.getElementById("formContainerContainer").style.display = "none";
 
     let formBucketContent = Object.keys(FormBucket);
 
-    if (formBucketContent.length == 1 || formBucketContent.length == (FormVariables.counter + 1)) {
-        onCreationForm = FormBucket[formBucketContent.length].content || '';
-        sumbitButn = submitBtns['lastForm'];
+    if (formBucketContent.length > 1 && FormVariables.counter > 1) {
+        prevFormBtn = submitBtns['hasPrev'];
     }
 
-    if (formBucketContent.length > 1) {
-        onCreationForm = FormBucket[FormVariables.counter].content || '';
-        sumbitButn = submitBtns['hasNext'];
-        FormVariables.counter++;
+    if (formBucketContent.length == 1 || formBucketContent.length == FormVariables.counter) {
+        onCreationForm = FormBucket[formBucketContent.length] || '';
+        //nextFormBtn = submitBtns['lastForm'];
+    }
+    else if (formBucketContent.length > 1) {
+        onCreationForm = FormBucket[FormVariables.counter] || '';
+        nextFormBtn = submitBtns['hasNext'];
     }
 
-    const actions = `${CLOSEBTN}${SAVEBTN}`;
+    document.getElementById("formNavFormBtns").innerHTML = `${prevFormBtn}${`&nbsp;${nextFormBtn}`}`;
+    document.getElementById("formContainerContainer").innerHTML = `${onCreationForm}`;
 
-    document.body.appendChild(previewContainer);
-    document.getElementById("previewFormContainer").innerHTML = `${actions}${onCreationForm}${sumbitButn}`;
+    setTimeout(async () => {
 
-    setTimeout(() => {
+        const context = document.getElementById("formContainerContainer");
+        await removeNewOptionContainer(context);
+        await removeRemoveComponent(context);
+        await resetLabelPos(context);
+        await resetFormLines(context);
+        await resetSelectPos(context);
+        await removeConfigButtons(context);
+        await resetOptionGroupContainer(context);
+        await removeConfigContnent(context);
 
-        const context = document.getElementById("previewFormContainer");
-        removeNewOptionContainer(context);
-        removeRemoveComponent(context);
-        resetLabelPos(context);
-        resetFormLines(context);
-        resetSelectPos(context);
-        removeConfigButtons(context);
-        resetOptionGroupContainer(context);
-        removeConfigContnent(context);
-        document.getElementById("previewFormContainer").style.display = "";
+        document.getElementById("formContainerContainer").style.display = "";
+        document.getElementById("spinningContainer").style.display = "none";
 
     }, 500);
 
@@ -279,7 +345,7 @@ const saveForm = function () {
 }
 
 
-function removeNewOptionContainer(ctx) {
+async function removeNewOptionContainer(ctx) {
 
     let allContainers = ctx.getElementsByClassName("newOptionContainer");
     for (let idx = 0; idx < allContainers.length; idx++) {
@@ -288,7 +354,7 @@ function removeNewOptionContainer(ctx) {
 
 }
 
-function removeConfigButtons(ctx) {
+async function removeConfigButtons(ctx) {
 
     let allConfigs = ctx.getElementsByClassName("inputComponentIcon");
     for (let idx = 0; idx < allConfigs.length; idx++) {
@@ -297,7 +363,7 @@ function removeConfigButtons(ctx) {
 
 }
 
-function removeRemoveComponent(ctx) {
+async function removeRemoveComponent(ctx) {
 
     let allContainers = ctx.getElementsByClassName("removeComponent");
     for (let idx = 0; idx < allContainers.length; idx++) {
@@ -307,7 +373,7 @@ function removeRemoveComponent(ctx) {
 
 }
 
-function resetLabelPos(ctx) {
+async function resetLabelPos(ctx) {
 
     let allContainers = ctx.getElementsByClassName("formInputLabel");
     for (let idx = 0; idx < allContainers.length; idx++) {
@@ -317,7 +383,7 @@ function resetLabelPos(ctx) {
 
 }
 
-function removeConfigContnent(ctx) {
+async function removeConfigContnent(ctx) {
 
     /*
     let allConfigs = ctx.getElementsByClassName("inputConfigPanel");
@@ -329,7 +395,7 @@ function removeConfigContnent(ctx) {
 
 }
 
-function resetFormLines(ctx) {
+async function resetFormLines(ctx) {
 
     let allContainers = ctx.getElementsByClassName("formNewLine");
     for (let idx = 0; idx < allContainers.length; idx++) {
@@ -339,7 +405,7 @@ function resetFormLines(ctx) {
 
 }
 
-function resetSelectPos(ctx) {
+async function resetSelectPos(ctx) {
 
     let allSelects = ctx.getElementsByClassName("selectComponent");
     for (let idx = 0; idx < allSelects.length; idx++) {
@@ -349,7 +415,7 @@ function resetSelectPos(ctx) {
 }
 
 
-function resetOptionGroupContainer(ctx) {
+async function resetOptionGroupContainer(ctx) {
 
     try {
 

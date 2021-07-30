@@ -184,7 +184,7 @@ span .lineRemover:hover{
     font: 13px tahoma;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     list-style: none;
-    letter-spacing: 0;
+    letter-spacing: -0.5px;
 }
 
 ul.componentList > li{
@@ -196,6 +196,11 @@ ul.componentList > li{
     border-radius: 3px;
     padding-left: 7px;
     padding-right: 7px;
+}
+
+ul.modelPannel{
+    margin-left: -21px;
+    width: 180px;
 }
 
 ul.modelPannel li:first-child{
