@@ -136,15 +136,11 @@ function closePreview() {
 }
 
 const nextForm = function () {
-    //const actions = `${CLOSEBTN}${SAVEBTN}`
-    //document.getElementById("previewFormContainer").innerHTML = `${actions}${spinningContent()}`;;
     FormVariables.counter++;
     formNavigate();
 }
 
 const prevForm = function () {
-    //const actions = `${CLOSEBTN}${SAVEBTN}`
-    //document.getElementById("previewFormContainer").innerHTML = `${actions}${spinningContent()}`;;
     FormVariables.counter--;
     formNavigate();
 }
@@ -238,14 +234,7 @@ const formNavigate = function () {
     setTimeout(async () => {
 
         const context = document.getElementById("formContainerContainer");
-        await removeNewOptionContainer(context);
-        await removeRemoveComponent(context);
-        await resetLabelPos(context);
-        await resetFormLines(context);
-        await resetSelectPos(context);
-        await removeConfigButtons(context);
-        await resetOptionGroupContainer(context);
-        await removeConfigContnent(context);
+        await parseFormToUserView(context);
 
         document.getElementById("formContainerContainer").style.display = "";
         document.getElementById("spinningContainer").style.display = "none";
@@ -268,23 +257,26 @@ const previewForm = function () {
     document.body.appendChild(previewContainer);
     document.getElementById("previewFormContainer").innerHTML = `${actions}${onCreationForm}`;
 
-    setTimeout(() => {
-
-        const context = document.getElementById("previewFormContainer");
-        removeNewOptionContainer(context);
-        removeRemoveComponent(context);
-        resetLabelPos(context);
-        resetFormLines(context);
-        resetSelectPos(context);
-        removeConfigButtons(context);
-        resetOptionGroupContainer(context);
-        removeConfigContnent(context);
-        document.getElementById("previewFormContainer").style.display = "";
-
+    setTimeout(async () => {
+        await parseFormToUserView();
     }, 500);
 
 }
 
+const parseFormToUserView = async function(ctx){
+    
+    const context = ctx || document.getElementById("previewFormContainer");
+    await removeNewOptionContainer(context);
+    await removeRemoveComponent(context);
+    await resetLabelPos(context);
+    await resetFormLines(context);
+    await resetSelectPos(context);
+    await removeConfigButtons(context);
+    await resetOptionGroupContainer(context);
+    await removeConfigContnent(context);
+    document.getElementById("previewFormContainer").style.display = "";
+
+}
 
 const sendForm = function (content, fields = "") {
 
@@ -310,10 +302,10 @@ const sendForm = function (content, fields = "") {
 
 }
 
-const saveForm = function () {
+const saveForm = async function () {
 
     if(Object.keys(FormBucket).length > 0){
-        saveLinkedForm();
+        await saveLinkedForm();
         return;
     }
 
@@ -323,18 +315,26 @@ const saveForm = function () {
 
 }
 
-const saveLinkedForm = function () {
+const saveLinkedForm = async function () {
 
     const ctx = document.getElementById("formContainerContainer");
-
     let linkedFormsContent = "";
+    let counter = 0;
 
     let allForms = Object.keys(FormBucket);
     for(idx of allForms){
-        linkedFormsContent += `${FormBucket[idx]}`;
+
+        if(counter == 0){
+            linkedFormsContent += `<span class="formWizardPage">${FormBucket[idx]}</span>`;
+            counter++;
+        }
+        linkedFormsContent += `<span class="formWizardPage" style="display:none;">${FormBucket[idx]}</span>`;
+
     }
 
     ctx.innerHTML = linkedFormsContent;
+
+    await parseFormToUserView(ctx);
     setTimeout(() => parseAndSaveFormContent(ctx), 1000);
 
 }

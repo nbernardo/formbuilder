@@ -134,5 +134,5 @@ app.get("/form-list", (req, client) => {
 
 })
 
-const CorrenteFormController = require("./controllers/business/CorrenteForm");
-app.use("/correnteform",CorrenteFormController);
+const RegFuncionarioController = require("./controllers/business/RegFuncionario");
+app.use("/regfuncionario",RegFuncionarioController);
