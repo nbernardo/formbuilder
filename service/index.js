@@ -134,8 +134,5 @@ app.get("/form-list", (req, client) => {
 
 })
 
-const AulasDeExplicacaoController = require("./controllers/business/AulasDeExplicacao");
-app.use("/aulasdeexplicacao",AulasDeExplicacaoController);
-
-const CarRegistrationController = require("./controllers/business/CarRegistration");
-app.use("/carregistration",CarRegistrationController);
+const CorrenteFormController = require("./controllers/business/CorrenteForm");
+app.use("/correnteform",CorrenteFormController);

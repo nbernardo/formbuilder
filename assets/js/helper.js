@@ -46,9 +46,9 @@ const disableOrAnableNewFormButton = function () {
 
 }
 
-const spinningContent = function () {
+const spinningContent = function (obj = {}) {
     return `
-        <div>Carregando, aguarde</div>
+        <div>${obj.texto || 'Carregando, aguarde'}</div>
         <div class="lds-ellipsis">
             <div></div>
             <div></div>

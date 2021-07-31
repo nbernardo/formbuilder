@@ -312,15 +312,42 @@ const sendForm = function (content, fields = "") {
 
 const saveForm = function () {
 
+    if(Object.keys(FormBucket).length > 0){
+        saveLinkedForm();
+        return;
+    }
+
     const ctx = document.getElementById("previewFormContainer");
     const databaseFieldList = ctx.getElementsByClassName("databaseField");
+    parseAndSaveFormContent(ctx)
+
+}
+
+const saveLinkedForm = function () {
+
+    const ctx = document.getElementById("formContainerContainer");
+
+    let linkedFormsContent = "";
+
+    let allForms = Object.keys(FormBucket);
+    for(idx of allForms){
+        linkedFormsContent += `${FormBucket[idx]}`;
+    }
+
+    ctx.innerHTML = linkedFormsContent;
+    setTimeout(() => parseAndSaveFormContent(ctx), 1000);
+
+}
+
+const parseAndSaveFormContent = function(ctx){
+
+    const databaseFieldList = ctx.getElementsByClassName("databaseField");
     let allDatabaseField = {};
+
 
     for (let field in databaseFieldList) {
         let curField = databaseFieldList[field];
         console.log(`Existing field: ${curField}`);
-        //let modelName = curField.dataset.model ? `${curField.dataset.model}.` : "";
-        //let modelName = "";
 
         if (curField.nodeName) {
 
@@ -342,8 +369,8 @@ const saveForm = function () {
 
     sendForm(realForm, allDatabaseField);
 
-}
 
+}
 
 async function removeNewOptionContainer(ctx) {
 
