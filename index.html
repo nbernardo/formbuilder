@@ -88,10 +88,12 @@
         <div class="form-space">
 
             <button type="button" id="newFormAddBtn" disabled onclick="createLinkedForm()">Adicionar Form</button>
-            
-            <div 
-                 id="spinningContent"
-                 style="display: none;
+            <select type="text" id="formDeterminanteList" style="display:; margin-top: 5px;">
+                <option value="">Gerar este form em função do: não definido</option>
+            </select>
+
+
+            <div id="spinningContent" style="display: none;
                         text-align: center;
                         align-content: center;
                         flex-direction: column;
@@ -105,7 +107,7 @@
                     <div></div>
                 </div>
             </div>
-            
+
             <div id="formArea"></div>
 
         </div>

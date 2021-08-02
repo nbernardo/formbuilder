@@ -121,6 +121,21 @@ const hideConfig = function (idComponente) {
     document.getElementById(idComponente).style.display = "none";
 }
 
+const showComplementInput = function (event, idComponente, status, idInput) {
+
+    const targetComplement = document.getElementById(idComponente);
+    let componentColor = { "true": "lightgrey", "false": "rgb(246, 242, 242)" };
+    let statusVal = { "true": "block", "false": "none" };
+
+    targetComplement.style.display = statusVal[status];
+    targetComplement.style.background = componentColor[status];
+    event.target.parentNode.style.background = componentColor[status];
+
+    const component = document.getElementById(idInput);
+    component.classList.add("requiredInputOnSubmission");
+
+}
+
 const showRequiredMessageInput = function (idComponente, status, idInput) {
 
     let statusVal = { "true": "block", "false": "none" };
@@ -132,13 +147,18 @@ const showRequiredMessageInput = function (idComponente, status, idInput) {
 }
 
 
-const populateComponent = function(event, idComponent){
+const populateComponent = function (event, idComponent) {
 
     let component = document.getElementById(idComponent);
     let values = event.target.value.toString().split("\n");
-    
+    component.innerHTML = "";
 
-    for(let value of values){
+    const stdOpt = document.createElement("option");
+    stdOpt.value = "";
+    stdOpt.innerHTML = "SELECCIONE";
+    component.appendChild(stdOpt);
+
+    for (let value of values) {
 
         const newComponent = document.createElement("option");
         newComponent.value = value;
@@ -171,17 +191,32 @@ const inputConfigMenuContent = ({ componentId, inputId, type }) => (
         </span>
 
         <ul data-input="${inputId}" data-panel="${componentId}">
+
             <li>
-                <label>Obrigatório:</label> 
+                <label class="rowLabel">Determinante:</label>
                 <input 
                     type="checkbox" 
-                    onchange="showRequiredMessageInput('reqMsg${componentId}',this.checked,'${inputId}');defConfigProp('${inputId}',{prop: 'required', value: this.checked});">
+                    onchange="showComplementInput(event,'depId${componentId}',this.checked,'${inputId}');handleDeterminant('${componentId}',this.checked)"
+                    >
             </li>
-            <li id="reqMsg${componentId}" style="display:none;">
-                <label>Mensagem erro:</label> 
+
+            <li id="depId${componentId}" class="complementDependent">
+                <label style="font-style: italic;">Designação: </label>
+                <input type="text" size="16" id="depInput${componentId}" onblur="addOrRemoveDepElm('depId${componentId}',this.value)">
+            </li>
+
+
+            <li>
+                <label class="rowLabel">Obrigatório:</label> 
+                <input 
+                    type="checkbox" 
+                    onchange="showComplementInput(event,'reqMsg${componentId}',this.checked,'${inputId}');defConfigProp('${inputId}',{prop: 'required', value: this.checked});">
+            </li>
+            <li id="reqMsg${componentId}" class="complementDependent">
+                <label style="font-style: italic;">Mensagem erro:</label> 
                 <input
                     onkeyup="defConfigProp('${inputId}',{data: 'requiredMessage', value: this.value});" 
-                    type="text">
+                    type="text" size="16">
             </li>
 
             <li>
@@ -203,13 +238,12 @@ const inputConfigMenuContent = ({ componentId, inputId, type }) => (
                     <option value="Float">Fração</option>
                 </select>
             </li>
-            ${
-                type == 'select' ?
-                `<li>
+            ${type == 'select' ?
+        `<li>
                     <label>Dados:</label> 
                     <textarea onblur="populateComponent(event,'${inputId}')" cols="25" rows="2"></textarea>
                  </li>` : ''
-            }
+    }
             <li>
                 <label>Qtd caracters:</label> 
                 <input 
@@ -323,5 +357,43 @@ const addOptionOnSelect = function (id, componentId) {
     document.getElementById(`select_${id}`).appendChild(newOption);
     document.getElementById(`select_${id}`).click();
     inputValue.value = "";
+
+}
+
+let DeterminantsValues = {}
+const addOrRemoveDepElm = function (id, value) {
+
+    if (value == "") {
+        delete DeterminantsValues[id];
+    } else
+        DeterminantsValues[id] = value;
+
+    const allDeterminants = Object.keys(DeterminantsValues);
+    const determinandInput = document.getElementById("formDeterminanteList");
+    determinandInput.innerHTML = "";
+
+    const mainOpt = document.createElement("option");
+    mainOpt.value = "";
+    mainOpt.innerHTML = "Gerar este form em função do: não definido";
+    determinandInput.appendChild(mainOpt);
+
+
+    for(let det of allDeterminants){
+        
+        let component = document.createElement("option");
+        component.innerHTML = `${DeterminantsValues[det]}`;
+        component.value = `${DeterminantsValues[det]}`;
+        determinandInput.appendChild(component);
+
+    }
+}
+
+const handleDeterminant = function(id,status){
+
+    const inputComponent = document.getElementById(`depInput${id}`);
+    if(status == false){
+        inputComponent.value = "";
+        addOrRemoveDepElm(`depId${id}`,'');
+    }
 
 }

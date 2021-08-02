@@ -260,3 +260,17 @@ ul.modelPannel li:first-child{
 .newModel{
 
 }
+
+
+.rowLabel{
+    float: left;
+    width: 105px;
+}
+
+
+.complementDependent{
+    padding-left:30px; 
+    padding-bottom: 5px; 
+    margin-top: -5px;
+    display:none;
+}
