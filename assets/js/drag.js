@@ -76,6 +76,38 @@ function getTotalLines() {
     return parseInt(document.getElementsByClassName("formNewLine").length);
 }
 
+function draggingOnPlaceholder(e){
+    console.log(`Arrastando os dados`);
+    const isLineEmpty = function () {
+
+        let targetedLine = document.getElementById(`${e.target.id}`);
+        return targetedLine.getElementsByTagName("span").length > 0 ? false : true;
+
+    }
+
+    e.target.style.background = `lightgrey`;
+
+    e.preventDefault();
+    allowDrag(e);
+    console.log("Arrastando na nova linha");
+
+    if (!isLineEmpty())
+        document.getElementById(`${e.target.id}`).style.display = "flex";
+
+}
+
+
+function dropOnPlaceholder(e){
+
+    e.preventDefault();
+    newComponen(e);
+    console.log(`Largou no dropOnPlaceholder`);
+
+    disableOrAnableNewFormButton();
+
+}
+
+
 function newComponentLine(e) {
 
     const isLastLineEmpty = function () {
@@ -95,31 +127,13 @@ function newComponentLine(e) {
     newLine.style.color = "lightgrey";    
 
     newLine.ondragover = function (e) {
-
-        const isLineEmpty = function () {
-
-            let targetedLine = document.getElementById(`${e.target.id}`);
-            return targetedLine.getElementsByTagName("span").length > 0 ? false : true;
-
-        }
-
-        e.preventDefault();
-        allowDrag(e);
-        console.log("Arrastando na nova linha");
-
-        if (!isLineEmpty())
-            document.getElementById(`${e.target.id}`).style.display = "flex";
-
+        //Draging on placeholder
+        draggingOnPlaceholder(e);
     }
 
     newLine.ondrop = function (e) {
-
-        e.preventDefault();
-        newComponen(e);
-        console.log(`Lagrou o objecto na linha nova`);
-
-        disableOrAnableNewFormButton();
-        
+        //Drop component on placeholder
+        dropOnPlaceholder(e);
     }
 
     newLine.className = "formNewLine";
@@ -147,9 +161,6 @@ function newComponentLine(e) {
         if(event.target.className == "editing_tabel")
             return;
         removeLine(event.target.dataset.lineId, event.target);
-        //let curLine = document.getElementById(newLine.id);
-        //document.getElementById("formArea").removeChild(curLine);
-        //document.getElementById("formArea").removeChild(removeLineBtn);
         disableOrAnableNewFormButton();
     }
 

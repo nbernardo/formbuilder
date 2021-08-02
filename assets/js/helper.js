@@ -131,7 +131,25 @@ const showRequiredMessageInput = function (idComponente, status, idInput) {
 
 }
 
-const inputConfigMenuContent = ({ componentId, inputId }) => (
+
+const populateComponent = function(event, idComponent){
+
+    let component = document.getElementById(idComponent);
+    let values = event.target.value.toString().split("\n");
+    
+
+    for(let value of values){
+
+        const newComponent = document.createElement("option");
+        newComponent.value = value;
+        newComponent.innerHTML = value;
+        component.appendChild(newComponent);
+
+    }
+
+}
+
+const inputConfigMenuContent = ({ componentId, inputId, type }) => (
 
     `                    
     <img
@@ -185,6 +203,13 @@ const inputConfigMenuContent = ({ componentId, inputId }) => (
                     <option value="Float">Fração</option>
                 </select>
             </li>
+            ${
+                type == 'select' ?
+                `<li>
+                    <label>Dados:</label> 
+                    <textarea onblur="populateComponent(event,'${inputId}')" cols="25" rows="2"></textarea>
+                 </li>` : ''
+            }
             <li>
                 <label>Qtd caracters:</label> 
                 <input 

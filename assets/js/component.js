@@ -6,14 +6,15 @@ class Component {
         return document.createElement(type);
     }
 
-    newConfig(inputId){
+    newConfig(inputId, inputType){
 
         const componentId = `inputConfig${(new Date()).getTime()}`;
 
         const container = this.newComponent("span");
+        container.style.width = "10px";
         container.className = "floatLeft";
         container.innerHTML = GlobalFacade
-                                .inputConfigMenuContent({componentId,inputId});
+                                .inputConfigMenuContent({componentId,inputId,type: inputType});
 
         return container;
 
@@ -29,6 +30,7 @@ class Component {
         container.id = containerId;
         container.classList.add("left5px");
         container.classList.add("displayCol");
+        container.style.height = "0px";
 
         removeBtn.innerHTML = "x";
         removeBtn.className = "posAbsolute removeComponent componentRemover";
@@ -244,7 +246,7 @@ class Component {
 
         addOptionBtn.appendChild(newOptionText);
         addOptionBtn.appendChild(btn);
-        container.appendChild(addOptionBtn);
+        //container.appendChild(addOptionBtn);
 
         let component = newComponent("select");
         component.id = `${idSelect}`;
@@ -259,7 +261,7 @@ class Component {
 
         component.appendChild(firstOption);
         container.appendChild(component);
-        container.appendChild(this.newConfig());
+        container.appendChild(this.newConfig(idSelect,'select'));
 
         return container;
 

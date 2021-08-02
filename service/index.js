@@ -111,9 +111,10 @@ app.post("/newForm", (req, client) => {
 
     //Generate  the funcions to call the service from the view
     const baseEndpoint = controllerGenerator.getBaseEndpoint().substr(1);
-    const viewController = ViewControllerGenerator.newController(fs, baseEndpoint, "save");
+    const viewController = ViewControllerGenerator.newController(fs, baseEndpoint, "save", formContent.linkedForms);
     const viewControllerContent = `<script>\n\n${viewController}\n\n</script>`;
-    const cssContent = `<link href="../assets/css/main.css" rel="stylesheet" />`;
+    const cssContent = `<link href="../assets/css/main.css" rel="stylesheet" />
+                        <link href="../assets/css/spinner.css" rel="stylesheet" />`;
 
     //Generate the view itself
     const frontEndPath = `${__dirname}/../frontend`;
@@ -121,6 +122,7 @@ app.post("/newForm", (req, client) => {
 
     fs.writeFile(`${frontEndPath}/${objectName}.html`, viewContent, (err) => {
         console.log(`Executou a criacao do ficheiro: `, err);
+        fs.writeFileSync(`${frontEndPath}/templates/${objectName}.html`,viewContent);
     });
 
 })
@@ -136,3 +138,9 @@ app.get("/form-list", (req, client) => {
 
 const RegFuncionarioController = require("./controllers/business/RegFuncionario");
 app.use("/regfuncionario",RegFuncionarioController);
+
+const SingleOneController = require("./controllers/business/SingleOne");
+app.use("/singleone",SingleOneController);
+
+const LigadosMultiController = require("./controllers/business/LigadosMulti");
+app.use("/ligadosmulti",LigadosMultiController);

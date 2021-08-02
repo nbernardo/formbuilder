@@ -3,26 +3,28 @@
 
 class ViewControllerGenerator {
 
-    static newController(fs, endpoint, method) {
+    static newController(fs, endpoint, method, wizard = false) {
 
-        //console.log(`Novo controller`);
         let jsonRequest = fs.readFileSync(`./util/templates/postJSONRequest.js`,'utf8');
-        //console.log(`File content:`);
         const PORT = process.env.PORT | 5000;
-    
+        
         /**
          * Replacing place holder:
          * #url, #action, #port
          */
         let requestMethods = jsonRequest
-                                .replace("#url",`${endpoint}`)
-                                .replace("#action",`${method}`)
-                                .replace("#port",PORT);
-    
-        console.log(requestMethods);
+        .replace("#url",`${endpoint}`)
+        .replace("#action",`${method}`)
+        .replace("#port",PORT);
+        
+        //console.log(requestMethods);
+        if(wizard){
+            let wizardScript = fs.readFileSync(`./util/templates/wizardNavigation.js`,'utf8');
+            requestMethods += `\n\n${wizardScript}`;
+        }
 
         return requestMethods;
-
+        
 
     }
 

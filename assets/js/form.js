@@ -71,6 +71,7 @@ const resetBuilderFeatures = function () {
     resetRemoveComponent();
     resetRemoveLine();
     resetComboBoxAddItem();
+    resetLineDragEvent();
     resetAllModelNameInputs(restateAllModels);
 }
 
@@ -159,11 +160,6 @@ const removeConfigOptionsOnPreview = function (onCreationForm) {
 }
 
 
-const submitBtns = {
-    "lastForm": `<button onclick='formSumit()' style="margin-top: 5px;">Guardar</button>`,
-    "hasNext": `<button onclick='nextForm()' style="margin-top: 5px;">Proximo</button>`,
-    "hasPrev": `<button onclick='prevForm()' style="margin-top: 5px;">Anterior</button>`
-}
 const previewLinkedForms = function () {
 
 
@@ -171,7 +167,7 @@ const previewLinkedForms = function () {
     navFormBtns.id = "formNavFormBtns";
     navFormBtns.style.height = "25px";
     //navFormBtns.style.border = "1px solid red";
-    
+
     let headerContainer = document.createElement("div");
     headerContainer.id = "formHeaderContainer";
     headerContainer.innerHTML = `${CLOSEBTN}${SAVEBTN}`;
@@ -204,6 +200,12 @@ const previewLinkedForms = function () {
 
 }
 
+
+const submitBtns = {
+    "lastForm": `<button onclick='formSumit()' style="margin-top: 5px;">Guardar</button>`,
+    "hasNext": `<button onclick='nextForm()' style="margin-top: 5px;">Proximo</button>`,
+    "hasPrev": `<button onclick='prevForm()' style="margin-top: 5px;">Anterior</button>`
+}
 const formNavigate = function () {
 
     let onCreationForm = '';
@@ -215,14 +217,13 @@ const formNavigate = function () {
 
     let formBucketContent = Object.keys(FormBucket);
 
-    if (formBucketContent.length > 1 && FormVariables.counter > 1) {
+    if (formBucketContent.length > 1 && FormVariables.counter > 1)
         prevFormBtn = submitBtns['hasPrev'];
-    }
 
-    if (formBucketContent.length == 1 || formBucketContent.length == FormVariables.counter) {
+
+    if (formBucketContent.length == 1 || formBucketContent.length == FormVariables.counter)
         onCreationForm = FormBucket[formBucketContent.length] || '';
-        //nextFormBtn = submitBtns['lastForm'];
-    }
+
     else if (formBucketContent.length > 1) {
         onCreationForm = FormBucket[FormVariables.counter] || '';
         nextFormBtn = submitBtns['hasNext'];
@@ -235,7 +236,6 @@ const formNavigate = function () {
 
         const context = document.getElementById("formContainerContainer");
         await parseFormToUserView(context);
-
         document.getElementById("formContainerContainer").style.display = "";
         document.getElementById("spinningContainer").style.display = "none";
 
@@ -263,8 +263,8 @@ const previewForm = function () {
 
 }
 
-const parseFormToUserView = async function(ctx){
-    
+const parseFormToUserView = async function (ctx) {
+    console.log(`CHamou o aqui`);
     const context = ctx || document.getElementById("previewFormContainer");
     await removeNewOptionContainer(context);
     await removeRemoveComponent(context);
@@ -288,6 +288,8 @@ const sendForm = function (content, fields = "") {
     form.append("formContent", content);
     form.append("databaseFields", JSON.stringify(fields));
     form.append("statedFormName", document.getElementById("statedFormName").value);
+    if (Object.keys(FormBucket).length > 1)
+        form.append("linkedForms", true);
 
     xhr.send(form);
 
@@ -304,7 +306,7 @@ const sendForm = function (content, fields = "") {
 
 const saveForm = async function () {
 
-    if(Object.keys(FormBucket).length > 0){
+    if (Object.keys(FormBucket).length > 0) {
         await saveLinkedForm();
         return;
     }
@@ -322,13 +324,13 @@ const saveLinkedForm = async function () {
     let counter = 0;
 
     let allForms = Object.keys(FormBucket);
-    for(idx of allForms){
+    for (idx of allForms) {
 
-        if(counter == 0){
+        if (counter == 0) {
             linkedFormsContent += `<span class="formWizardPage">${FormBucket[idx]}</span>`;
             counter++;
-        }
-        linkedFormsContent += `<span class="formWizardPage" style="display:none;">${FormBucket[idx]}</span>`;
+        } else
+            linkedFormsContent += `<span class="formWizardPage" style="display:none;">${FormBucket[idx]}</span>`;
 
     }
 
@@ -339,7 +341,7 @@ const saveLinkedForm = async function () {
 
 }
 
-const parseAndSaveFormContent = function(ctx){
+const parseAndSaveFormContent = function (ctx) {
 
     const databaseFieldList = ctx.getElementsByClassName("databaseField");
     let allDatabaseField = {};
@@ -406,6 +408,18 @@ async function resetLabelPos(ctx) {
     for (let idx = 0; idx < allContainers.length; idx++) {
         allContainers[idx].classList.remove("paddingLeft10px");
         allContainers[idx].contentEditable = false;
+    }
+
+}
+
+function resetLineDragEvent(ctx) {
+
+    let components = document.getElementsByClassName("formNewLine");
+    for (let x = 0; x < components.length; x++) {
+
+        components[x].ondragover = event => draggingOnPlaceholder(event);
+        components[x].ondrop = event => dropOnPlaceholder(event);
+
     }
 
 }
