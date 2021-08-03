@@ -136,11 +136,5 @@ app.get("/form-list", (req, client) => {
 
 })
 
-const RegFuncionarioController = require("./controllers/business/RegFuncionario");
-app.use("/regfuncionario",RegFuncionarioController);
-
-const SingleOneController = require("./controllers/business/SingleOne");
-app.use("/singleone",SingleOneController);
-
-const LigadosMultiController = require("./controllers/business/LigadosMulti");
-app.use("/ligadosmulti",LigadosMultiController);
+const HabitanteController = require("./controllers/business/Habitante");
+app.use("/habitante",HabitanteController);

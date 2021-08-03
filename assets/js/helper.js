@@ -202,7 +202,11 @@ const inputConfigMenuContent = ({ componentId, inputId, type }) => (
 
             <li id="depId${componentId}" class="complementDependent">
                 <label style="font-style: italic;">Designação: </label>
-                <input type="text" size="16" id="depInput${componentId}" onblur="addOrRemoveDepElm('depId${componentId}',this.value)">
+                <input type="text" size="16" id="depInput${componentId}" 
+                       onblur="addOrRemoveDepElm('depId${componentId}',this.value);"
+                       onkeyup="defConfigProp('${inputId}',{data: 'determinant', value: this.value});"
+                       onchange="defConfigProp('${inputId}',{data: 'determinant', value: this.value});"
+                       >
             </li>
 
 
@@ -258,17 +262,35 @@ const inputConfigMenuContent = ({ componentId, inputId, type }) => (
 
 
 const defConfigProp = function (idInput, { data, prop, value }) {
-
+ 
     const component = document.getElementById(idInput);
+    component.onblur = null;
+    
+    component.classList.remove("thisIdDetermined");
+    component[prop] = "";
+
+    if(component.dataset[data]) 
+        component.dataset[data] = "";
+    
     if (prop) {
         component[prop] = value;
         return;
     }
 
-    component.dataset[data] = value;
+    component.dataset[data] = `${value}`;
+
+    if(data == "determinant" && value != ""){
+        component.classList.add("thisIdDetermined");
+        //component.onblur = `generateDeterminedForm(this.value, this.dataset.determinant)`;
+    }
 
 }
 
+const determinantAction = function(){
+
+    
+
+}
 
 const GlobalFacade = {
     activeFieldConfig: [],

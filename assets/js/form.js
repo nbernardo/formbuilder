@@ -13,9 +13,17 @@ const createLinkedForm = function () {
         return;
     }
 
-    const curForm = document.getElementById("formArea").innerHTML;
+    let curForm = document.getElementById("formArea").innerHTML;
+    curForm = curForm.indexOf("<contentinit>") >= 0 ? curForm.split("<contentinit>")[1] : curForm;
+
     document.getElementById("formArea").innerHTML = "";
-    addNewForm(curForm);
+    
+    let determinandField = document.getElementById("formDeterminanteList").value;
+    const dependingField = determinandField = "" ? "" : `class="countDependentForm" data-determinant=${determinandField}`;
+    let startTag = `<span ${dependingField}>`;
+    let endTag = `</span>`;
+
+    addNewForm(`${startTag}<contentinit>${curForm}${endTag}`);
 
 
 }

@@ -22,12 +22,13 @@ async function formNavigate() {
         prevFormBtn = submitBtns['hasPrev'];
 
 
-    if (formBucketContent.length == 1 || (formBucketContent.length - 1) == wizardCounter)
+    if (formBucketContent.length == 1)
         wizardPages[0].style.display = "";
 
     else if (formBucketContent.length > 1) {
         wizardPages[wizardCounter].style.display = "";
-        nextFormBtn = submitBtns['hasNext'];
+        if((formBucketContent.length-1) > wizardCounter)
+            nextFormBtn = submitBtns['hasNext'];
     }
 
     document.getElementById("formNavFormBtns").innerHTML = `${prevFormBtn}${`&nbsp;${nextFormBtn}`}`;
@@ -57,5 +58,49 @@ async function hideForms() {
     const wizardPages = document.getElementsByClassName("formWizardPage");
     for (let idx = 0; idx < wizardPages.length; idx++)
         wizardPages[idx].style.display = "none";
+
+}
+
+
+function getDeterminedForm(value){
+
+    let determinedForms = document.getElementsByClassName("countDependentForm")
+    return Object
+                .values(determinedForms)
+                .filter(v => v.dataset.determinant == value);
+
+}
+
+function generateDeterminedForm(num,value){
+
+    let counter = 0;
+    let finalContent = ``;
+    let curForm = getDeterminedForm(value);
+    const formContent = curForm[0].outerHTML;
+    let curFormContainer = curForm[0].parentNode;
+
+    while(counter < num){
+        finalContent += `<h3>${(counter+1)}º ${value}</h3>${formContent}<br>`;
+        counter++;
+    }
+
+    //Replaces the form content with the numbeer of forms determined/defined
+    curFormContainer.innerHTML = finalContent;
+
+}
+
+window.onload = function(){
+
+    let allDeterminantFields = document.getElementsByClassName("thisIdDetermined");
+    allDeterminantFields = Object.values(allDeterminantFields);
+
+    allDeterminantFields.forEach(c => {
+        c.onblur = function(event){
+            
+            const curElm = event.target;
+            generateDeterminedForm(curElm.value, curElm.dataset.determinant);
+            console.log(`Processed the generated code: `);
+        }
+    })
 
 }
