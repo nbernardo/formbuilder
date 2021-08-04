@@ -13,6 +13,8 @@ function postJSONRequest({ action, callback, content }) {
 
         if (xhr.readyState == xhr.DONE) {
             callback(xhr.responseText);
+            document.getElementById("spinningContainer").style.display = "none";
+            document.getElementById("spinningCurtain").style.display = "none";
         }
 
     }
@@ -21,6 +23,8 @@ function postJSONRequest({ action, callback, content }) {
 
 function formSumit() {
 
+    document.getElementById("spinningCurtain").style.display = "";
+    document.getElementById("spinningContainer").style.display = "";
     let content = {};
     const fields = document.getElementsByClassName("databaseField");
 

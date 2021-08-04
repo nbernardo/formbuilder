@@ -89,7 +89,7 @@ app.post("/newForm", (req, client) => {
     const formName = formContent.statedFormName;
     console.log(`Campos achados`);
     console.log(databaseFields);
-    client.send("Process done!");
+    
 
     const modelList = generateModels(databaseFields);
 
@@ -100,30 +100,48 @@ app.post("/newForm", (req, client) => {
     controllerGenerator.modelList = modelList;
     controllerGenerator
         .newController(fs)
-        .createOnFs();
+        .createOnFs()
+        .then(async (r) => {
 
+            if(controllerGenerator.generationExcetion){
+                client.send({ok: false});
+                return;
+            }
 
-    //Import the new generated controller
-    const stream = fs.createWriteStream("index.js", { flags: "a" });
-    stream.once('open', (fd) => {
-        stream.write(controllerGenerator.importController());
-    });
+            //Import the new generated controller
+            const stream = fs.createWriteStream("index.js", { flags: "a" });
+            stream.once('open', (fd) => {
 
-    //Generate  the funcions to call the service from the view
-    const baseEndpoint = controllerGenerator.getBaseEndpoint().substr(1);
-    const viewController = ViewControllerGenerator.newController(fs, baseEndpoint, "save", formContent.linkedForms);
-    const viewControllerContent = `<script>\n\n${viewController}\n\n</script>`;
-    const cssContent = `<link href="../assets/css/main.css" rel="stylesheet" />
+                stream.write(controllerGenerator.importController());
+
+                //Generate  the funcions to call the service from the view
+                const baseEndpoint = controllerGenerator.getBaseEndpoint().substr(1);
+                const viewController = ViewControllerGenerator.newController(fs, baseEndpoint, "save", formContent.linkedForms);
+                const viewControllerContent = `<script>\n\n${viewController}\n\n</script>`;
+                const cssContent = `<link href="../assets/css/main.css" rel="stylesheet" />
                         <link href="../assets/css/spinner.css" rel="stylesheet" />`;
 
-    //Generate the view itself
-    const frontEndPath = `${__dirname}/../frontend`;
-    let viewContent = `${cssContent}\n\n${formContent.formContent}\n\n${viewControllerContent}`;
+                //Generate the view itself
+                const frontEndPath = `${__dirname}/../frontend`;
+                let viewContent = `${cssContent}\n\n${formContent.formContent}\n\n${viewControllerContent}`;
 
-    fs.writeFile(`${frontEndPath}/${objectName}.html`, viewContent, (err) => {
-        console.log(`Executou a criacao do ficheiro: `, err);
-        fs.writeFileSync(`${frontEndPath}/templates/${objectName}.html`,viewContent);
-    });
+                fs.writeFile(`${frontEndPath}/${objectName}.html`, viewContent, (err) => {
+                    
+                    console.log(`Executou a criacao do ficheiro: `, err);
+                    if(err){
+                        client.send({ok: false});
+                        return;
+                    }
+                    fs.writeFileSync(`${frontEndPath}/templates/${objectName}.html`, viewContent);
+                    client.send({ok: true});
+
+                });
+
+            });
+
+
+        });
+
 
 })
 
@@ -136,5 +154,5 @@ app.get("/form-list", (req, client) => {
 
 })
 
-const HabitanteController = require("./controllers/business/Habitante");
-app.use("/habitante",HabitanteController);
+const AlunoController = require("./controllers/business/Aluno");
+app.use("/aluno",AlunoController);

@@ -32,6 +32,8 @@ router.post("/save", async (req, client) => {
         }
     }
 
+    client.send({ok: true});
+
 });
 
 module.exports = router;

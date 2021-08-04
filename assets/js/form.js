@@ -190,6 +190,15 @@ const previewLinkedForms = function () {
     spinningContainer.id = "spinningContainer";
     spinningContainer.innerHTML = spinningContent();
     spinningContainer.style.textAlign = "center";
+    spinningContainer.style.position = "absolute";
+    spinningContainer.style.margin = "0 auto";
+    spinningContainer.style.width = "100%";
+    spinningContainer.style.zIndex = "100";
+
+
+    let spinningCurtain = document.createElement("div");
+    spinningCurtain.id = "spinningCurtain";
+    spinningCurtain['style'] = `position: absolute;width: 100%;top: 0;left: 0;height: 100%;background: rgba(255,255,255,.8); display: none;`;
 
     let formContainer = document.createElement("div");
     formContainer.id = "formContainerContainer";
@@ -200,6 +209,7 @@ const previewLinkedForms = function () {
     previewContainer.appendChild(navFormBtns);
     previewContainer.appendChild(navButtonsContainer);
     previewContainer.appendChild(spinningContainer);
+    previewContainer.appendChild(spinningCurtain);
     previewContainer.appendChild(formContainer);
 
     document.body.appendChild(previewContainer);

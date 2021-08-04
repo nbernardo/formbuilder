@@ -10,6 +10,7 @@ class ControllerGenerator {
     controllerName = null;
     fileSystem = null;
     modelList = [];
+    generationExcetion = false;
 
     constructor(name){
         this.controllerName = name;
@@ -54,12 +55,15 @@ class ControllerGenerator {
     /**
     * @param {FileSys} fs 
     */
-    createOnFs(fs = null) {
-
+    async createOnFs(fs = null) {
+        
         const controllerPath = `${__dirname}/business`;
         console.log(controllerPath);
-        this.fileSystem.writeFile(`${controllerPath}/${this.controllerName}.js`, this.controllerContent, (err) => {
+        this.fileSystem.writeFileSync(`${controllerPath}/${this.controllerName}.js`, this.controllerContent, (err) => {
 
+            if(err){
+                this.generationExcetion = true;
+            }
             console.log(`Controller was created`);
             console.log(`${err}`);
 
