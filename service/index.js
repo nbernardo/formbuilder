@@ -156,3 +156,9 @@ app.get("/form-list", (req, client) => {
 
 const AlunoController = require("./controllers/business/Aluno");
 app.use("/aluno",AlunoController);
+
+const NovoFormController = require("./controllers/business/NovoForm");
+app.use("/novoform",NovoFormController);
+
+const MaisUmFormController = require("./controllers/business/MaisUmForm");
+app.use("/maisumform",MaisUmFormController);

@@ -17,7 +17,7 @@ const createLinkedForm = function () {
     curForm = curForm.indexOf("<contentinit>") >= 0 ? curForm.split("<contentinit>")[1] : curForm;
 
     document.getElementById("formArea").innerHTML = "";
-    
+
     let determinandField = document.getElementById("formDeterminanteList").value;
     const dependingField = determinandField = "" ? "" : `class="countDependentForm" data-determinant=${determinandField}`;
     let startTag = `<span ${dependingField}>`;
@@ -168,6 +168,28 @@ const removeConfigOptionsOnPreview = function (onCreationForm) {
 }
 
 
+const spinningObjects = function(){
+
+    let spinningContainer = document.createElement("div");
+    spinningContainer.id = "spinningContainer";
+    spinningContainer.innerHTML = spinningContent();
+    spinningContainer.style.textAlign = "center";
+    spinningContainer.style.position = "absolute";
+    spinningContainer.style.margin = "0 auto";
+    spinningContainer.style.width = "100%";
+    spinningContainer.style.zIndex = "100";
+    spinningContainer.style.display = "none";
+
+
+    let spinningCurtain = document.createElement("div");
+    spinningCurtain.id = "spinningCurtain";
+    spinningCurtain['style'] = `position: absolute;width: 100%;top: 0;left: 0;height: 100%;background: rgba(255,255,255,.8); display: none;`;
+
+    return {spinningContainer, spinningCurtain};
+
+}
+
+
 const previewLinkedForms = function () {
 
 
@@ -186,30 +208,18 @@ const previewLinkedForms = function () {
     let previewContainer = document.createElement("div");
     previewContainer.id = "previewFormContainer";
 
-    let spinningContainer = document.createElement("div");
-    spinningContainer.id = "spinningContainer";
-    spinningContainer.innerHTML = spinningContent();
-    spinningContainer.style.textAlign = "center";
-    spinningContainer.style.position = "absolute";
-    spinningContainer.style.margin = "0 auto";
-    spinningContainer.style.width = "100%";
-    spinningContainer.style.zIndex = "100";
-
-
-    let spinningCurtain = document.createElement("div");
-    spinningCurtain.id = "spinningCurtain";
-    spinningCurtain['style'] = `position: absolute;width: 100%;top: 0;left: 0;height: 100%;background: rgba(255,255,255,.8); display: none;`;
-
     let formContainer = document.createElement("div");
     formContainer.id = "formContainerContainer";
     formContainer.style.display = "none";
     formContainer.style.marginTop = "10px";
 
+    const spinner = spinningObjects();
+
     previewContainer.appendChild(headerContainer);
     previewContainer.appendChild(navFormBtns);
     previewContainer.appendChild(navButtonsContainer);
-    previewContainer.appendChild(spinningContainer);
-    previewContainer.appendChild(spinningCurtain);
+    previewContainer.appendChild(spinner.spinningContainer);
+    previewContainer.appendChild(spinner.spinningCurtain);
     previewContainer.appendChild(formContainer);
 
     document.body.appendChild(previewContainer);
@@ -263,6 +273,8 @@ const formNavigate = function () {
 
 const previewForm = function () {
 
+    const spinner = spinningObjects();
+
     let onCreationForm = document.getElementById("formArea").innerHTML;
     let previewContainer = document.createElement("div");
     previewContainer.id = "previewFormContainer";
@@ -271,9 +283,11 @@ const previewForm = function () {
 
     const actions = `${CLOSEBTN}${SAVEBTN}`;
 
-
     document.body.appendChild(previewContainer);
-    document.getElementById("previewFormContainer").innerHTML = `${actions}${onCreationForm}`;
+    document.getElementById("previewFormContainer").innerHTML = `${spinner.spinningContainer.outerHTML}
+                                                                 ${spinner.spinningCurtain.outerHTML}
+                                                                 ${actions}
+                                                                 ${onCreationForm}`;
 
     setTimeout(async () => {
         await parseFormToUserView();
@@ -296,6 +310,44 @@ const parseFormToUserView = async function (ctx) {
 
 }
 
+const handleSpinner = function (stat) {
+
+    const statuses = {
+        "show": "",
+        "hide": "none"
+    }
+
+    document.getElementById("spinningContainer").style.display = statuses[stat];
+    document.getElementById("spinningCurtain").style.display = statuses[stat];
+
+}
+
+const showMessageToast = function (msg) {
+
+    if (document.getElementById("toastMessageContainer")) {
+        const existingToast = document.getElementById("toastMessageContainer");
+        existingToast.parentNode.removeChild(existingToast);
+    }
+
+    const toaster = document.createElement("div");
+    toaster.id = "toastMessageContainer";
+    toaster.innerHTML = msg;
+
+    document.body.appendChild(toaster);
+
+    let x = document.getElementById("toastMessageContainer")
+    x.className = "show";
+
+    setTimeout(function () { x.className = x.className.replace("show", ""); }, 5000);
+
+
+    // ok, neste caso tem de se rever s configurações, ele estava acessível 
+    // function launch_toast() {
+
+    //}
+
+}
+
 const sendForm = function (content, fields = "") {
 
     const SERVER = "http://localhost:5000";
@@ -315,6 +367,8 @@ const sendForm = function (content, fields = "") {
 
         if (xhr.readyState == 4) {
             console.log(`Resultado e: `);
+            handleSpinner("hide");
+            showMessageToast("Form gerado com sucesso");
             console.log(xhr.responseText);
         }
 
@@ -324,6 +378,7 @@ const sendForm = function (content, fields = "") {
 
 const saveForm = async function () {
 
+    handleSpinner("show");
     if (Object.keys(FormBucket).length > 0) {
         await saveLinkedForm();
         return;
