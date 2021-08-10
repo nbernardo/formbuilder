@@ -112,18 +112,57 @@ const extractProperEntityName = function (text) {
 
 
 /** Input config helper functions */
-const showConfig = function (idComponente) {
-    document.getElementById(idComponente).style.display = "";
-    GlobalFacade.activeFieldConfig.push(idComponente)
+const showConfig = function (idComponente, inputId) {
+
+    let curInput;
+    const ctx = document.getElementById(idComponente);
+
+    ctx.style.display = "";
+    GlobalFacade.activeFieldConfig.push(idComponente);
+
+    if (curInput = document.getElementById(inputId)) {
+
+        const requiredMsg = curInput.dataset.requiredMessage;
+        const _size = curInput.dataset.size != "" ? curInput.dataset.size : "";
+
+        ctx.getElementsByClassName("dataFieldType")[0].value = curInput.dataset.type || "";
+        ctx.getElementsByClassName("dataFieldPlaceholder")[0].value = curInput.placeholder;
+        ctx.getElementsByClassName("dataFieldSize")[0].value = _size;
+
+        if (curInput.dataset.determinant != undefined && curInput.dataset.determinant != "") {
+
+            if (!ctx.getElementsByClassName("dataFieldDeterminant")[0].checked)
+                ctx.getElementsByClassName("dataFieldDeterminant")[0].click();
+            ctx.getElementsByClassName("dataFieldDepName")[0].value = curInput.dataset.determinant;
+        }
+
+        if (requiredMsg != undefined && requiredMsg != "") {
+            if (!ctx.getElementsByClassName("dataFieldRequired")[0].checked)
+                ctx.getElementsByClassName("dataFieldRequired")[0].click()
+            ctx.getElementsByClassName("dataFieldRequiredMSG")[0].value = requiredMsg;
+        }
+
+        //if(curInput.dataset.requiredMessage)
+
+    }
+
+
 }
 
 const hideConfig = function (idComponente) {
     document.getElementById(idComponente).style.display = "none";
 }
 
-const showComplementInput = function (event, idComponente, status, idInput) {
+const showComplementInput = function (event, idComponente, status, idInput, type) {
 
     const targetComplement = document.getElementById(idComponente);
+    
+    if(!status){
+
+        document.getElementById(idInput).dataset[type] = "";
+        console.log(`Eliminou a propriedade de: ${type}`);
+    }
+
     let componentColor = { "true": "lightgrey", "false": "rgb(246, 242, 242)" };
     let statusVal = { "true": "block", "false": "none" };
 
@@ -173,7 +212,7 @@ const inputConfigMenuContent = ({ componentId, inputId, type }) => (
 
     `                    
     <img
-    onclick="showConfig('${componentId}')"
+    onclick="showConfig('${componentId}','${inputId}')"
     data-panel="${componentId}"
     src="assets/icons/config.png" 
     class="inputComponentIcon inputConfigIcon">
@@ -195,14 +234,14 @@ const inputConfigMenuContent = ({ componentId, inputId, type }) => (
             <li>
                 <label class="rowLabel">Determinante:</label>
                 <input 
-                    type="checkbox" 
-                    onchange="showComplementInput(event,'depId${componentId}',this.checked,'${inputId}');handleDeterminant('${componentId}',this.checked)"
+                    type="checkbox" class="dataFieldDeterminant"
+                    onchange="showComplementInput(event,'depId${componentId}',this.checked,'${inputId}','determinant');handleDeterminant('${componentId}',this.checked)"
                     >
             </li>
 
             <li id="depId${componentId}" class="complementDependent">
                 <label style="font-style: italic;">Designação: </label>
-                <input type="text" size="16" id="depInput${componentId}" 
+                <input type="text" size="16" id="depInput${componentId}" class="dataFieldDepName" 
                        onblur="addOrRemoveDepElm('depId${componentId}',this.value);"
                        onkeyup="defConfigProp('${inputId}',{data: 'determinant', value: this.value});"
                        onchange="defConfigProp('${inputId}',{data: 'determinant', value: this.value});"
@@ -213,12 +252,12 @@ const inputConfigMenuContent = ({ componentId, inputId, type }) => (
             <li>
                 <label class="rowLabel">Obrigatório:</label> 
                 <input 
-                    type="checkbox" 
-                    onchange="showComplementInput(event,'reqMsg${componentId}',this.checked,'${inputId}');defConfigProp('${inputId}',{prop: 'required', value: this.checked});">
+                    type="checkbox" class="dataFieldRequired"
+                    onchange="showComplementInput(event,'reqMsg${componentId}',this.checked,'${inputId}','requiredMessage');defConfigProp('${inputId}',{prop: 'required', value: this.checked});">
             </li>
             <li id="reqMsg${componentId}" class="complementDependent">
                 <label style="font-style: italic;">Mensagem erro:</label> 
-                <input
+                <input class="dataFieldRequiredMSG"
                     onkeyup="defConfigProp('${inputId}',{data: 'requiredMessage', value: this.value});" 
                     type="text" size="16">
             </li>
@@ -226,14 +265,14 @@ const inputConfigMenuContent = ({ componentId, inputId, type }) => (
             <li>
                 <label>Texto guia:</label> 
                 <input 
-                    type="text"
+                    type="text" class="dataFieldPlaceholder"
                     onkeyup="defConfigProp('${inputId}',{prop: 'placeholder', value: (this.value != '' ? this.value : 'Digite um texto')});"
                     >
             </li>
             <li>
                 <label>Tipo de dados:</label> 
                 <select 
-                    class="notDataFieldConsider"
+                    class="notDataFieldConsider dataFieldType"
                     onchange="defConfigProp('${inputId}',{data: 'type', value: this.value});"
                     type="text">
                     <option value="">Seleccione o tipo</option>
@@ -251,7 +290,7 @@ const inputConfigMenuContent = ({ componentId, inputId, type }) => (
     }
             <li>
                 <label>Qtd caracters:</label> 
-                <input 
+                <input class="dataFieldSize"
                     onkeyup="defConfigProp('${inputId}',{data: 'size', value: this.value});"
                     type="number">
             </li>
@@ -263,16 +302,16 @@ const inputConfigMenuContent = ({ componentId, inputId, type }) => (
 
 
 const defConfigProp = function (idInput, { data, prop, value }) {
- 
+
     const component = document.getElementById(idInput);
     component.onblur = null;
-    
+
     component.classList.remove("thisIdDetermined");
     component[prop] = "";
 
-    if(component.dataset[data]) 
+    if (component.dataset[data])
         component.dataset[data] = "";
-    
+
     if (prop) {
         component[prop] = value;
         return;
@@ -280,16 +319,16 @@ const defConfigProp = function (idInput, { data, prop, value }) {
 
     component.dataset[data] = `${value}`;
 
-    if(data == "determinant" && value != ""){
+    if (data == "determinant" && value != "") {
         component.classList.add("thisIdDetermined");
         //component.onblur = `generateDeterminedForm(this.value, this.dataset.determinant)`;
     }
 
 }
 
-const determinantAction = function(){
+const determinantAction = function () {
 
-    
+
 
 }
 
@@ -401,8 +440,8 @@ const addOrRemoveDepElm = function (id, value) {
     determinandInput.appendChild(mainOpt);
 
 
-    for(let det of allDeterminants){
-        
+    for (let det of allDeterminants) {
+
         let component = document.createElement("option");
         component.innerHTML = `${DeterminantsValues[det]}`;
         component.value = `${DeterminantsValues[det]}`;
@@ -411,12 +450,12 @@ const addOrRemoveDepElm = function (id, value) {
     }
 }
 
-const handleDeterminant = function(id,status){
+const handleDeterminant = function (id, status) {
 
     const inputComponent = document.getElementById(`depInput${id}`);
-    if(status == false){
+    if (status == false) {
         inputComponent.value = "";
-        addOrRemoveDepElm(`depId${id}`,'');
+        addOrRemoveDepElm(`depId${id}`, '');
     }
 
 }
