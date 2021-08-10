@@ -424,11 +424,12 @@ const parseAndSaveFormContent = function (ctx) {
     let allDatabaseField = {};
     let allFieldTypes = {};
     let idx = 0;
+    let standardDatatype = "text";
 
 
     for (let field in databaseFieldList) {
         let curField = databaseFieldList[field];
-        console.log(`Existing field: ${curField}`);
+        console.log(`Existing field: ${curField.id}`);
 
         if (curField.nodeName) {
 
@@ -436,7 +437,7 @@ const parseAndSaveFormContent = function (ctx) {
                 let modelName = curField.dataset.model ? `${curField.dataset.model}.` : "";
                 if (!Object.keys(allDatabaseField).includes(`${modelName}${curField.name}`)){
                     allDatabaseField[`${modelName}${curField.name}`] = "";
-                    allFieldTypes[(++idx)] = `${curField.dataset.type}`; 
+                    allFieldTypes[(++idx)] = `${(curField.dataset.type || standardDatatype)}`;
                 }
             }
         }

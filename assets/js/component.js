@@ -6,7 +6,7 @@ class Component {
         return document.createElement(type);
     }
 
-    newConfig(inputId, inputType){
+    newConfig(inputId, inputType) {
 
         const componentId = `inputConfig${(new Date()).getTime()}`;
 
@@ -14,7 +14,7 @@ class Component {
         container.style.width = "10px";
         container.className = "floatLeft";
         container.innerHTML = GlobalFacade
-                                .inputConfigMenuContent({componentId,inputId,type: inputType});
+            .inputConfigMenuContent({ componentId, inputId, type: inputType });
 
         return container;
 
@@ -62,18 +62,18 @@ class Component {
 
     }
 
-    newLabel(ctx){
-        
+    newLabel(ctx) {
+
         const lable = document.createElement("label");
         lable.contentEditable = true;
         lable.className = "formInputLabel paddingRight10px paddingLeft10px textBold";
         lable.innerHTML = "Rótulo do campo";
 
-        lable.onblur = function(){
+        lable.onblur = function () {
             updateActiveForm();
         }
 
-        lable.onkeyup = function(event){
+        lable.onkeyup = function (event) {
 
             let optionsCtx;
             let optionInputs;
@@ -81,12 +81,12 @@ class Component {
             //console.log(`Digitando o valor`);
             //console.log(event.target.parentNode.id);
 
-            if(event.target.parentNode.id.toLowerCase().indexOf("optiongroupcontainer") >= 0){
-                
+            if (event.target.parentNode.id.toLowerCase().indexOf("optiongroupcontainer") >= 0) {
+
                 optionsCtx = event.target.parentNode;
                 optionInputs = optionsCtx.getElementsByTagName("input");
 
-                for(let idx = 0; idx < optionInputs.length; idx++){
+                for (let idx = 0; idx < optionInputs.length; idx++) {
                     optionInputs[idx].name = extractProperIdValue(event.target.innerHTML);
                 }
 
@@ -94,28 +94,26 @@ class Component {
                 return;
             }
 
-            if(optionsCtx){
 
-                comboBox = optionsCtx.getElementsByTagName("select");
-                if(comboBox.length > 0 && !comboBox[0].classList.contains("notDataFieldConsider")){
-                    comboBox[0].name = extractProperIdValue(event.target.innerHTML);
-                    comboBox[0].classList.add("databaseField");
-                    return;
-                }
-                
+            comboBox = ctx.getElementsByTagName("select");
+            if (comboBox.length > 0 && !comboBox[0].classList.contains("notDataFieldConsider")) {
+                comboBox[0].name = extractProperIdValue(event.target.innerHTML);
+                comboBox[0].classList.add("databaseField");
+                return;
             }
+
 
             //ctx.getElementsByTagName("input")[0].value = extractProperIdValue(event.target.innerHTML);
             const inputFields = ctx.getElementsByTagName("input");
             const totalFields = inputFields.length;
 
-            if(totalFields == 1){
+            if (totalFields == 1) {
                 ctx.getElementsByTagName("input")[0].name = extractProperIdValue(event.target.innerHTML);
                 ctx.getElementsByTagName("input")[0].classList.add("databaseField");
             }
 
-            if(totalFields > 1){
-                for(let x = 0; x < totalFields; x++){
+            if (totalFields > 1) {
+                for (let x = 0; x < totalFields; x++) {
                     ctx.getElementsByTagName("input")[x].name = extractProperIdValue(event.target.innerHTML);
                     ctx.getElementsByTagName("input")[x].classList.add("databaseField");
                 }
@@ -132,7 +130,7 @@ class Component {
 
         let component = this.newComponent("input");
         const inputId = `inputId${(new Date()).getTime()}`;
-        
+
         component.className = `databaseField`;
         component.id = inputId;
 
@@ -170,12 +168,12 @@ class Component {
         label.classList.add("optionLabel");
         label.innerHTML = values[value];
 
-        label.onblur = function(){
+        label.onblur = function () {
             updateActiveForm();
         }
 
 
-        label.onkeyup = function(event){
+        label.onkeyup = function (event) {
 
             const curLabel = event.target;
             const taiedInput = curLabel.nextSibling;
@@ -221,7 +219,7 @@ class Component {
     }
 
 
-    newSelect({model}) {
+    newSelect({ model }) {
 
         let idNum = (new Date()).getTime();
         let idSelect = `select_${idNum}`;
@@ -261,7 +259,7 @@ class Component {
 
         component.appendChild(firstOption);
         container.appendChild(component);
-        container.appendChild(this.newConfig(idSelect,'select'));
+        container.appendChild(this.newConfig(idSelect, 'select'));
 
         return container;
 
@@ -282,11 +280,11 @@ class Component {
         label.classList.add("optionLabel");
         label.innerHTML = values[value];
 
-        label.onblur = function(){
+        label.onblur = function () {
             updateActiveForm();
         }
 
-        label.onkeyup = function(event){
+        label.onkeyup = function (event) {
 
             const curLabel = event.target;
             const taiedInput = curLabel.nextSibling;

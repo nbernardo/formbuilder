@@ -22,7 +22,7 @@ app.listen(PORT, () => console.log(`Servico rodando em ${PORT}`));
 /**
  * @param {Array} fields 
  */
-const parseFieldAndModels = function (fields, defaultModel = "MainModel") {
+const parseFieldAndModels = function (fields, types, defaultModel = "MainModel") {
 
     fieldsAndModels = {};
 
@@ -42,7 +42,7 @@ const parseFieldAndModels = function (fields, defaultModel = "MainModel") {
         if (curModel) {
 
             if (!fieldsAndModels[curModel]) fieldsAndModels[curModel] = [];
-            fieldsAndModels[curModel].push(curField);
+            fieldsAndModels[curModel].push({field: curField, type: types[x]});
 
         }
 
@@ -78,9 +78,9 @@ const generateSQLModels = async function (databaseFields) {
 
 }
 
-const generateJSONModels = async function (databaseFields, formName) {
+const generateJSONModels = async function (databaseFields, fieldsType, formName) {
 
-    const modelsAndFields = parseFieldAndModels(databaseFields);
+    const modelsAndFields = parseFieldAndModels(databaseFields, fieldsType);
     const models = Object.keys(modelsAndFields);
     const foreignModel = models[0];
     let firstModel = null;
@@ -112,13 +112,14 @@ app.post("/newForm", async (req, client) => {
     const formContent = req.body;
     const databaseFields = Object.keys(JSON.parse(formContent.databaseFields));
     const formName = formContent.statedFormName;
-
+    const fieldsType = Object.values(JSON.parse(formContent.fieldTypes));
 
     //const modelList = await generateSQLModels(databaseFields);
-    const jsonModels = await generateJSONModels(databaseFields, formName);
-    console.log(`A model was generated:`);
-    console.log(`Do retorno:`);
+    const jsonModels = await generateJSONModels(databaseFields, fieldsType, formName);
+    //console.log(`A model was generated:`);
+    //console.log(`Do retorno:`);
     console.log(jsonModels);
+
 
     formContent.entityName = formName;
     const objectName = formContent.entityName || `NewObject_${(new Date).getTime()}`;
@@ -179,3 +180,6 @@ app.get("/form-list", (req, client) => {
     })
 
 })
+
+const jogoController = require("./controllers/business/jogo");
+app.use("/jogo",jogoController);

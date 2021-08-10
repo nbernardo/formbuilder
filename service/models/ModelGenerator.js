@@ -34,7 +34,7 @@ module.exports = class ModelGenerator {
         let modelContent = `const PostgresInstance = require("../dbconnection/PostgresInstance");\n\nclass ${this.modelName}{\n`;
 
         for (let idx in fields) {
-            modelContent += `\n\t${fields[idx]};`;
+            modelContent += `\n\t${fields[idx].field};`;
             //console.log(`Na linha ${idx}: ${modelContent}`);
         }
 
@@ -107,27 +107,32 @@ module.exports = class ModelGenerator {
                 let fieldsName = ``;
         
                 for(let idx in fields)
-                    fieldsName += `'\${this.${fields[idx]}}',`;
+                    fieldsName += `'\${this.${fields[idx].field}}',`;
                 return fieldsName.substr(0, fieldsName.length-1)+")";
 
             },
             name: () => {
-                return fields.join(",");
+                return fields.map(f => f.field ).join(",");
             },
             json: () => {
 
-                const addFields = {"text": "keyword","integer": "text"};
+                const addFields = {
+                                    "text": "keyword",
+                                    "date": "keyword",
+                                    "integer": "text",
+                                    "double": "text"
+                                };
                 
                 let jsonFields = {};
                 for(let idx in fields){
 
-                    let dataType = dataTypes[idx];
-                    jsonFields[fields[idx]] = {
+                    let dataType = fields[idx].type;
+                    jsonFields[fields[idx].field] = {
                         type: dataType, fields: {}
                     };
                     let addField = addFields[dataType];
-                    jsonFields[fields[idx]].fields[addField] = addField;
-                    
+                    jsonFields[fields[idx].field].fields[addField] = {type: addField};
+
                 }
                 return jsonFields;
             }
@@ -136,6 +141,8 @@ module.exports = class ModelGenerator {
     }
 
     nasteObject(name, values){
+        console.log(`Adicionando o:`);
+        console.log(values);
         this.jsonFields.mappings.properties[name] = {
             type: "nested",
             properties: values
