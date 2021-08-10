@@ -3,6 +3,7 @@
 
 const FileSys = require('../models/interfaces/FileSystem');
 const ViewControllerGenerator = require('../util/ControllerGeneratorUtil');
+const { indexNameExtract } = require('../util/stringUtil');
 
 class ControllerGenerator {
 
@@ -36,7 +37,8 @@ class ControllerGenerator {
         if(this.modelList.length > 0){
 
             const allModels = '"'+this.modelList.join(`","`)+'"';
-            this.controllerContent = `${controllerRouter}${controllerContent.replace("#models",allModels)}`;  
+            const indexName = indexNameExtract(this.controllerName);
+            this.controllerContent = `${controllerRouter}${controllerContent.replace(/#models/g,allModels).replace("#indexName",`"${indexName}"`)}`;  
             //console.log(`Multi models`);
             //console.log(allModels);
 

@@ -1,5 +1,5 @@
 const { Pool } = require("pg");
-const DBInstance = require("./interfaces/DBInstance");
+const DBInstance = require("../interfaces/DBInstance");
 
 class PostgresInstance extends DBInstance {
 

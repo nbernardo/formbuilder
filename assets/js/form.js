@@ -348,7 +348,7 @@ const showMessageToast = function (msg) {
 
 }
 
-const sendForm = function (content, fields = "") {
+const sendForm = function (content, fields = "", fieldTypes = "") {
 
     const SERVER = "http://localhost:5000";
     const xhr = new XMLHttpRequest();
@@ -357,10 +357,14 @@ const sendForm = function (content, fields = "") {
     const form = new FormData();
     form.append("formContent", content);
     form.append("databaseFields", JSON.stringify(fields));
+    form.append("fieldTypes", JSON.stringify(fieldTypes));
     form.append("statedFormName", document.getElementById("statedFormName").value);
     if (Object.keys(FormBucket).length > 1)
         form.append("linkedForms", true);
 
+    console.log(`Tipos definidos:`);
+    console.log(JSON.stringify(fieldTypes));
+    
     xhr.send(form);
 
     xhr.onloadend = function () {
@@ -418,6 +422,8 @@ const parseAndSaveFormContent = function (ctx) {
 
     const databaseFieldList = ctx.getElementsByClassName("databaseField");
     let allDatabaseField = {};
+    let allFieldTypes = {};
+    let idx = 0;
 
 
     for (let field in databaseFieldList) {
@@ -428,8 +434,10 @@ const parseAndSaveFormContent = function (ctx) {
 
             if (curField.name != "" && (curField.nodeName.toLowerCase() == "input" || curField.nodeName.toLowerCase() == "select")) {
                 let modelName = curField.dataset.model ? `${curField.dataset.model}.` : "";
-                if (!Object.keys(allDatabaseField).includes(`${modelName}${curField.name}`))
+                if (!Object.keys(allDatabaseField).includes(`${modelName}${curField.name}`)){
                     allDatabaseField[`${modelName}${curField.name}`] = "";
+                    allFieldTypes[(++idx)] = `${curField.dataset.type}`; 
+                }
             }
         }
 
@@ -442,7 +450,7 @@ const parseAndSaveFormContent = function (ctx) {
     console.log(`Campos encontrados:`);
     console.log(allDatabaseField);
 
-    sendForm(realForm, allDatabaseField);
+    sendForm(realForm, allDatabaseField, allFieldTypes);
 
 
 }

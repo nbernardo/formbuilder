@@ -1,16 +1,24 @@
 const FileSys = require('./interfaces/FileSystem');
 const DBInstance = require("./interfaces/DBInstance");
+const ES = require('./dbconnection/ElasticSearchInsance');
+const { indexNameExtract } = require('../util/stringUtil');
 
 module.exports = class ModelGenerator {
 
     fields = [];
+    fieldsType = [];
     modelContent = null;
     tableName;
     modelName = null;
     foreignModel = null;
+    jsonFields = {mappings:{properties: {}}};
 
     constructor(name){
         this.modelName = name;
+    }
+
+    newJSONModel({engine}) {
+        return this.getModelFields().name();
     }
 
     newModel() {
@@ -23,11 +31,11 @@ module.exports = class ModelGenerator {
 
         let fields = this.fields;
         
-        let modelContent = `const PostgresInstance = require("../PostgresInstance");\n\nclass ${this.modelName}{\n`;
+        let modelContent = `const PostgresInstance = require("../dbconnection/PostgresInstance");\n\nclass ${this.modelName}{\n`;
 
         for (let idx in fields) {
             modelContent += `\n\t${fields[idx]};`;
-            console.log(`Na linha ${idx}: ${modelContent}`);
+            //console.log(`Na linha ${idx}: ${modelContent}`);
         }
 
         const saveString = this.generateSaveString();
@@ -52,7 +60,7 @@ module.exports = class ModelGenerator {
     createOnFs(fs){
 
         const modelPath = `${__dirname}/business`;
-        console.log(modelPath);
+        //console.log(modelPath);
         fs.writeFile(`${modelPath}/${this.modelName}.js`,this.modelContent, (err) => {
 
             console.log(`File was created`);
@@ -67,7 +75,7 @@ module.exports = class ModelGenerator {
     /** 
     * @param { DBInstance } dbInstance
     */
-    createTable(dbInstance){
+    async createTable(dbInstance){
 
         let queryString = `CREATE TABLE ${this.modelName || this.tableName}(\n`;
         queryString += `id SERIAL PRIMARY KEY, `;
@@ -78,7 +86,9 @@ module.exports = class ModelGenerator {
         }
 
         queryString = `${queryString.substr(0,queryString.length - 1)}\n\n)`;
-        dbInstance.runQuery(queryString);
+        await dbInstance.runQuery(queryString);
+
+        console.log(`Create table called`);
 
         return this;
 
@@ -88,6 +98,8 @@ module.exports = class ModelGenerator {
     getModelFields(){
 
         const fields = this.fields;
+        const dataTypes = this.fieldsType;
+
 
         return {
             value: () => {
@@ -99,11 +111,40 @@ module.exports = class ModelGenerator {
                 return fieldsName.substr(0, fieldsName.length-1)+")";
 
             },
-            name: (queryString) => {
+            name: () => {
                 return fields.join(",");
+            },
+            json: () => {
+
+                const addFields = {"text": "keyword","integer": "text"};
+                
+                let jsonFields = {};
+                for(let idx in fields){
+
+                    let dataType = dataTypes[idx];
+                    jsonFields[fields[idx]] = {
+                        type: dataType, fields: {}
+                    };
+                    let addField = addFields[dataType];
+                    jsonFields[fields[idx]].fields[addField] = addField;
+                    
+                }
+                return jsonFields;
             }
         };
 
+    }
+
+    nasteObject(name, values){
+        this.jsonFields.mappings.properties[name] = {
+            type: "nested",
+            properties: values
+        };
+    }
+
+    async createNastedObject({index}){
+        index = indexNameExtract(index);
+        await ES.createMapping({index, mappingObj: this.jsonFields});
     }
 
     generateSaveString(){

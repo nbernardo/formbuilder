@@ -2,4 +2,5 @@ service/controllers/business
 service/models/business
 service/models/business/*
 service/node_modules
+service/node_modules/*
 frontend/

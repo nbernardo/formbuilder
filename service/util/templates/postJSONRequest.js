@@ -21,6 +21,9 @@ function postJSONRequest({ action, callback, content }) {
 
 }
 
+document.getElementById("spinningContainer").style.display = "none";
+document.getElementById("spinningCurtain").style.display = "none";
+
 function formSumit() {
 
     document.getElementById("spinningCurtain").style.display = "";
