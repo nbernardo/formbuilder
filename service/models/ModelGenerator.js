@@ -126,12 +126,19 @@ module.exports = class ModelGenerator {
                 let jsonFields = {};
                 for(let idx in fields){
 
-                    let dataType = fields[idx].type;
-                    jsonFields[fields[idx].field] = {
-                        type: dataType, fields: {}
-                    };
-                    let addField = addFields[dataType];
-                    jsonFields[fields[idx].field].fields[addField] = {type: addField};
+                    if(fields[idx].field != undefined
+                        && fields[idx].field != null
+                        && fields[idx].field != ""){
+
+                        let dataType = fields[idx].type;
+                        jsonFields[fields[idx].field] = {
+                            type: dataType, fields: {}
+                        };
+                        let addField = addFields[dataType];
+                        jsonFields[fields[idx].field].fields[addField] = {type: addField};
+
+                    }
+
 
                 }
                 return jsonFields;

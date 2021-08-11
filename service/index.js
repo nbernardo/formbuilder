@@ -42,7 +42,7 @@ const parseFieldAndModels = function (fields, types, defaultModel = "MainModel")
         if (curModel) {
 
             if (!fieldsAndModels[curModel]) fieldsAndModels[curModel] = [];
-            fieldsAndModels[curModel].push({field: curField, type: types[x]});
+            fieldsAndModels[curModel].push({ field: curField, type: types[x] });
 
         }
 
@@ -102,7 +102,7 @@ const generateJSONModels = async function (databaseFields, fieldsType, formName)
             firstModel.nasteObject(modelName, modelGenerator.getModelFields().json());
 
     }
-    firstModel.createNastedObject({index: formName});
+    firstModel.createNastedObject({ index: formName });
     return models
 
 }
@@ -183,3 +183,6 @@ app.get("/form-list", (req, client) => {
 
 const jogoController = require("./controllers/business/jogo");
 app.use("/jogo",jogoController);
+
+const universidadeController = require("./controllers/business/universidade");
+app.use("/universidade",universidadeController);
