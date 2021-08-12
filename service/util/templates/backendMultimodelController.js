@@ -3,8 +3,8 @@ router.use(require("body-parser")());
 
 router.post("/save", async (req, client) => {
 
-    const content = (req.body instanceof Object) ? req.body : JSON.parse(req.body);
-    const sendModels = Object.keys(content);
+    const content = (req.body.allField instanceof Object) ? req.body.allField : JSON.parse(req.body.allField);
+    const nestedModels = req.body['nestedModels'] ? JSON.parse(req.body['nestedModels']) : {};
 
     const listOfModels = [#models];
     let modelsMap = {};
@@ -26,6 +26,12 @@ router.post("/save", async (req, client) => {
 
         }
     }
+
+    let allNestedModel = Object.keys(nestedModels);
+    for(let model of allNestedModel){
+        modelsData.body[model] = nestedModels[model];
+    }
+
     const ES = require("../../models/dbconnection/ElasticSearchInsance");
     const result = await ES.addIndex(modelsData);
     client.send({ ok: true });

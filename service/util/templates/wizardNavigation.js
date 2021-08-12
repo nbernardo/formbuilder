@@ -91,6 +91,15 @@ function generateDeterminedForm(num,value){
 
 window.onload = function(){
 
+    let wizardPage = document.getElementsByClassName("countDependentForm");
+    wizardPage = Object.values(wizardPage);
+
+    //State all determined group of fields
+    for(let idx in wizardPage)
+        if(wizardPage[idx].dataset.determinant != undefined
+            && wizardPage[idx].dataset.determinant != "")
+            wizardPage[idx].classList.add("thisIdDetermined");
+
     let allDeterminantFields = document.getElementsByClassName("thisIdDetermined");
     allDeterminantFields = Object.values(allDeterminantFields);
 
@@ -104,3 +113,37 @@ window.onload = function(){
     })
 
 }
+
+
+/*
+let nestedModels;
+const parseNestedObject = function (callback) {
+
+    nestedModels = {}
+
+    let containers = document.getElementsByClassName("countDependentForm");
+    let containersLst = Object.values(containers);
+    const allFieldContainers = containersLst.filter(cmp => cmp.dataset.determinant != undefined && cmp.dataset.determinant != "");
+
+    for (let idx in allFieldContainers) {
+
+        let allFields = allFieldContainers[idx].getElementsByClassName("databaseField");
+        allFields = Object.values(allFields);
+        let newObject = {};
+
+        if(!nestedModels[allFields[0].dataset.model])
+            nestedModels[allFields[0].dataset.model] = [];
+
+        for (let field of allFields) {
+
+            if(!newObject[field.name])
+                newObject[field.name] = field.value;
+
+        }
+        nestedModels[allFields[0].dataset.model].push(newObject);
+
+    }
+
+    callback(nestedModels);
+}
+*/

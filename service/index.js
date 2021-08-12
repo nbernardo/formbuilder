@@ -181,8 +181,5 @@ app.get("/form-list", (req, client) => {
 
 })
 
-const jogoController = require("./controllers/business/jogo");
-app.use("/jogo",jogoController);
-
-const universidadeController = require("./controllers/business/universidade");
-app.use("/universidade",universidadeController);
+const concecionariaController = require("./controllers/business/concecionaria");
+app.use("/concecionaria",concecionariaController);
